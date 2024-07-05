@@ -1,17 +1,20 @@
+import { HomePage } from './HomePage'
+import { MorePage } from './MorePage'
+
 @Entry
 @Component
 struct Index {
   @State message: string = 'Hello World'
 
   build() {
-    Row() {
-      Column() {
-        Text(this.message)
-          .fontSize(50)
-          .fontWeight(FontWeight.Bold)
-      }
-      .width('100%')
+    Tabs({ barPosition: BarPosition.End }) {
+      TabContent() {
+        HomePage()
+      }.tabBar($r('app.string.app_name'))
+
+      TabContent() {
+        MorePage()
+      }.tabBar('我的')
     }
-    .height('100%')
   }
 }
