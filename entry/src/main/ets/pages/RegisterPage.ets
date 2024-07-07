@@ -59,8 +59,13 @@ struct RegisterPage {
             promptAction.showToast({message:'用户名和密码只能包括[a-zA-Z0-9-_]'})
             return
           }
+          if(!(this.password==this.confirmpassword))
+          {
+            promptAction.showToast({message:'输入密码不一致'})
+            return
+          }
           // 后端请求
-          let a = this.sendData({username:this.username,pwd:this.password})
+          this.sendRegisterMsg({username:this.username,pwd:this.password,confirmpwd:this.confirmpassword})
 
         }).margin({top:30})
 
@@ -81,12 +86,24 @@ struct RegisterPage {
     }.width("90%").backgroundColor($r('app.color.backgroud_white')).height("75%").borderRadius(50)
   }
 
-  async sendData(params:object){
+  async sendRegisterMsg(params:object){
     // 1.创建
     let httprequest = http.createHttp()
 
-    let a = await httprequest.request("https://127.0.0.1:8080",{extraData:Object})
-    return JSON.parse(a.result.toString())
+     await httprequest.request("https://127.0.0.1:8080",
+      {
+        method:http.RequestMethod.POST,
+        extraData:params
+      },
+      (err,data)=>{
+        if(!err)
+        {
+          if(JSON.parse(data.result.toString()).code == 10001)
+            promptAction.showToast({message:'注册成功'})
+            router.back()
+        }
+    }
+    )
     // 3.销毁
     httprequest.destroy()
 

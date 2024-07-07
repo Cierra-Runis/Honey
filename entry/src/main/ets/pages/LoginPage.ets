@@ -42,7 +42,7 @@ struct LoginPage {
           //前端验证
           if(this.username.length < 4)
           {
-            promptAction.showToast({message:'用户名长度需大于4'})
+            promptAction.showToast({message:'用户名长度需>=4'})
             return
           }
           if(!(this.regExp.test(this.password)&&this.regExp.test(this.username)))
@@ -51,14 +51,8 @@ struct LoginPage {
             return
           }
           // 后端请求
-          // let a = this.sendData({username:this.username,pwd:this.password})
-          // a.then((data)=>{
-          //   // if(code==10000){router.pushURL}
-          //   // else:
-          // })
-          //   .catch()
-          //   .finally()
-          router.pushUrl({url:'pages/HomePage'})
+          let a = this.sendLoginMsg({username:this.username,pwd:this.password})
+          router.pushUrl({url:'pages/HomePage'}) //测试用，连接后端后请注释掉
         }).margin({top:30})
 
       Row(){
@@ -78,12 +72,24 @@ struct LoginPage {
     }.width("90%").backgroundColor($r('app.color.backgroud_white')).height("70%").borderRadius(50)
   }
 
-  async sendData(params:object){
+  async sendLoginMsg(params:object){
     // 1.创建
     let httprequest = http.createHttp()
 
-    let a = await httprequest.request("https://127.0.0.1:8080",{extraData:Object})
-    return JSON.parse(a.result.toString())
+    await httprequest.request("https://127.0.0.1:8080",
+      {
+        method:http.RequestMethod.POST,
+        extraData:params
+      },
+      (err,data)=>{
+        if(!err)
+        {
+          if(JSON.parse(data.result.toString()).code == 10000)
+            promptAction.showToast({message:'登录成功'})
+          router.pushUrl({url:'pages/HomePage'})
+        }
+      }
+    )
     // 3.销毁
     httprequest.destroy()
 
