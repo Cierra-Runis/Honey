@@ -5,6 +5,8 @@
     "pages/MorePage",
     "pages/LoginPage",
     "pages/RegisterPage",
-    "pages/AboutPage"
+    "pages/AboutPage",
+    "pages/UploadPage",
+    "pages/ProfilePage"
   ]
 }
