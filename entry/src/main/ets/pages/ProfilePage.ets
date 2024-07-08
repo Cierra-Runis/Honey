@@ -1,14 +1,14 @@
-
 import router from '@ohos.router';
+
 class User {
   id: number;
   name: string;
   email: string;
   token: string;
-  email_verified_at: string | null;  // 可以是字符串或者null
-  created_at: string;  // 使用字符串表示日期时间
-  updated_at: string;  // 使用字符串表示日期时间
-  startday: string;  // 存储格式化后的日期字符串
+  email_verified_at: string | null; // 可以是字符串或者null
+  created_at: string; // 使用字符串表示日期时间
+  updated_at: string; // 使用字符串表示日期时间
+  startday: string; // 存储格式化后的日期字符串
   upday: string;
 
   constructor(id: number, name: string, email: string, token: string,
@@ -47,26 +47,25 @@ let user = new User(
 );
 //邮箱是否验证
 let ema: String = "未验证";
-if(user.email_verified_at!=null){
+if (user.email_verified_at != null) {
   ema = user.email_verified_at
 }
 
 //介绍样式
-@Extend(Text)
-function globalFancy () {
+@Extend(Text) function globalFancy() {
   .padding({
-    left:10,
-    right:30,
-    top:10,
-    bottom:10
+    left: 10,
+    right: 30,
+    top: 10,
+    bottom: 10
   }).fontColor(Color.Gray).fontSize(17)
 }
 //row样式
 @Extend(Row) function rowFancy() {
   .width("80%").height("20%").justifyContent(FlexAlign.Start).border({
-    width: {bottom:1},
-    color:Color.Gray,
-    style:BorderStyle.Solid
+    width: { bottom: 1 },
+    color: Color.Gray,
+    style: BorderStyle.Solid
   })
 }
 
@@ -74,62 +73,61 @@ function globalFancy () {
 @Entry
 @Component
 struct ProfilePage {
-  build(){
-    Column(){
-      Row(){
-        Row(){
-          //可以看到，图片调整大小直接使用width就可以了
-          Image($r("app.media.logo"),).width(35).fillColor("#ff292525").margin({left:23})
-          Text("编辑个人信息").fontSize(25).borderStyle(BorderStyle.Solid).layoutWeight(1).margin({left:25})
-        }.width("80%").padding({left:10,right:10})
-        .justifyContent(FlexAlign.SpaceBetween)
+  build() {
+    Navigation() {
+      Column() {
+        //头像
+        Column({ space: 8 }) {
+          Image($r("app.media.icon")).width(64)
+          Text(user.name).fontSize(18).borderStyle(BorderStyle.Solid)
+        }
+        .width("80%")
+        .height("20%")
+        .padding(15)
+        .backgroundColor(Color.White)
+        .margin(10)
+        .borderRadius(10)
+        .justifyContent(FlexAlign.Center)
 
-      }.width("100%").height(80).backgroundColor(Color.White).padding({left:10,right:10})
-      .justifyContent(FlexAlign.SpaceBetween)
-      //头像
-      Column(){
-        Image($r("app.media.icon")).width(100).height(100).borderRadius(50)
-        Row(){
-          Text("姓名").fontSize(15).borderStyle(BorderStyle.Solid).padding({
-            left:10,
-            right:30,
-            top:10,
-            bottom:10
+        //个人信息
+        Column() {
+          Row() {
+            Text("电子邮箱").fontSize(15).globalFancy()
+            Text(user.email).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1)
+
+          }.rowFancy()
+
+          Row() {
+            Text("创建时间").fontSize(15).globalFancy()
+            Text(user.startday).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1)
+          }.rowFancy()
+
+          Row() {
+            Text("更新时间").fontSize(15).globalFancy()
+            Text(user.upday).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1)
+          }.rowFancy()
+
+          Row() {
+            Text("邮箱验证").fontSize(15).globalFancy()
+            Text(ema.toString()).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1)
+          }.rowFancy()
+
+          Image($r("app.media.ic_public_add_norm")).width(40).fillColor("#ff6d51dd")
+            .margin({ top: 20 }).onClick(() => {
+            router.pushUrl({ url: 'pages/UploadPage' })
           })
-          Text(user.name).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1)
-        }.width("80%").height("20%").justifyContent(FlexAlign.Start)
-      }.width("80%").height("20%").padding(15).backgroundColor(Color.White).margin(10)
-      .borderRadius(10).justifyContent(FlexAlign.Center)
-      //个人信息
-      Column(){
-        Row(){
-          Text("电子邮箱").fontSize(15).globalFancy()
-          Text(user.email).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1)
+          Text("上传句子").fontSize(14).padding(5).fontColor(Color.Gray)
 
-        }.rowFancy()
-        Row(){
-          Text("创建时间").fontSize(15).globalFancy()
-          Text(user.startday).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1)
-        }.rowFancy()
-        Row(){
-          Text("更新时间").fontSize(15).globalFancy()
-          Text(user.upday).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1)
-        }.rowFancy()
-        Row(){
-          Text("邮箱验证").fontSize(15).globalFancy()
-          Text(ema.toString()).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1)
-        }.rowFancy()
+        }
+        .width("80%")
+        .height("60%")
+        .padding(15)
+        .backgroundColor(Color.White)
+        .margin({ bottom: 10 })
+        .borderRadius(10)
+        .justifyContent(FlexAlign.Start)
 
-        Image($r("app.media.ic_public_add_norm")).width(40).fillColor("#ff6d51dd")
-          .margin({top:20}).onClick(()=>{
-          router.pushUrl({url:'pages/UploadPage'})
-        })
-        Text("上传句子").fontSize(14).padding(5).fontColor(Color.Gray)
-
-      }.width("80%").height("60%").padding(15).backgroundColor(Color.White).margin({bottom:10})
-      .borderRadius(10).justifyContent(FlexAlign.Start)
-
-    }.width("100%").height("100%").backgroundColor("#ccc").justifyContent(FlexAlign.Start)
-
+      }.width("100%").height("100%").backgroundColor("#ccc").justifyContent(FlexAlign.Center)
+    }.title('编辑个人信息').titleMode(NavigationTitleMode.Mini)
   }
 }

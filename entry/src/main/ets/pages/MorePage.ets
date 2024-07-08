@@ -22,13 +22,13 @@ export struct MorePage {
         ListItem() {
           Text('我的投稿').width('100%')
         }.onClick(() => {
-          router.pushUrl({ url: 'pages/AboutPage' })
+          router.pushUrl({ url: 'pages/UserUploadPage' })
         }).padding(16)
 
         ListItem() {
           Text('我的收藏').width('100%')
         }.onClick(() => {
-          router.pushUrl({ url: 'pages/AboutPage' })
+          router.pushUrl({ url: 'pages/UserFavoritePage' })
         }).padding(16)
 
         ListItem() {

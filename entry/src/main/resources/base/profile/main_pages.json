@@ -7,6 +7,8 @@
     "pages/RegisterPage",
     "pages/AboutPage",
     "pages/UploadPage",
-    "pages/ProfilePage"
+    "pages/ProfilePage",
+    "pages/UserFavoritePage",
+    "pages/UserUploadPage"
   ]
 }

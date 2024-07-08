@@ -12,7 +12,7 @@ struct LoginPage {
 
   @Builder top() {
     Column() {
-      Image($r("app.media.logo")).width(150).margin({ top: 40 })
+      Image($r("app.media.logo")).width(72).margin({ top: 40 })
     }
   }
 
@@ -74,7 +74,12 @@ struct LoginPage {
     Column() {
       this.top()
       this.form()
-    }.width("90%").backgroundColor($r('app.color.backgroud_white')).height("70%").borderRadius(50)
+    }
+    .width("90%")
+    .backgroundColor($r('app.color.backgroud_white'))
+    .height("70%")
+    .borderRadius(50)
+    .justifyContent(FlexAlign.Center)
   }
 
   async sendLoginMsg(params: object) {
@@ -102,18 +107,19 @@ struct LoginPage {
   }
 
   build() {
-    Column() {
-      Stack() {
-        Image($r("app.media.yiyanbackground"))
-        Column() {
-          this.loginCard()
+    Navigation() {
+      Column() {
+        Stack() {
+          Image($r("app.media.yiyanbackground"))
+          Column() {
+            this.loginCard()
+          }
+          .width("100%")
+          .height("100%")
+          .backgroundColor(Color.Transparent)
+          .justifyContent(FlexAlign.SpaceEvenly)
         }
-        .width("100%")
-        .height("100%")
-        .backgroundColor(Color.Transparent)
-        .justifyContent(FlexAlign.SpaceEvenly)
       }
-    }
-
+    }.title('登录').titleMode(NavigationTitleMode.Mini)
   }
 }

@@ -26,20 +26,25 @@ export struct AboutPage {
   build() {
     Navigation() {
       Column({ space: 8 }) {
-        Image(this.appInfo.icon).width(100).height(100).margin(16)
-        Text('版本号：' + this.appInfo.version).margin(8)
-        Text(this.appInfo.description).margin(8)
+
+        Column() {
+
+          Image(this.appInfo.icon).width(100).height(100).margin(16)
+          Text('版本号：' + this.appInfo.version).margin(8)
+          Text(this.appInfo.description).margin(8)
 
 
-        GridRow({ columns: 4 }) {
-          ForEach(this.authors, (item, index) => {
-            GridCol() {
-              Column() {
-                Image(`https://avatars.githubusercontent.com/u/${item.id}`).width(48).borderRadius(48 / 2)
-                Text(item.username).fontSize(12)
+          GridRow({ columns: 4 }) {
+            ForEach(this.authors, (item, index) => {
+              GridCol() {
+                Column() {
+                  Image(`https://avatars.githubusercontent.com/u/${item.id}`).width(48).borderRadius(48 / 2)
+                  Text(item.username).fontSize(12)
+                }
               }
-            }
-          })
+            })
+          }
+
         }
 
         Button('跳转到 GitHub 仓库', { stateEffect: true })
@@ -53,9 +58,9 @@ export struct AboutPage {
             let context = getContext(this) as common.UIAbilityContext
             await context.startAbility(want)
           })
-        
-      }
-    }.title('关于')
+
+      }.justifyContent(FlexAlign.SpaceEvenly).height('100%')
+    }.title('关于').titleMode(NavigationTitleMode.Mini)
   }
 }
 
