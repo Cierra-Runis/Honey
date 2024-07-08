@@ -21,7 +21,7 @@ struct RegisterPage {
     Column() {
       Row() {
         Image($r("app.media.loginu")).width(25).margin({ right: 5, top: 0 })
-        TextInput({ placeholder: "用户名/邮箱/手机号" })
+        TextInput({ placeholder: "用户名" })
           .onChange((value) => {
             this.username = value
           }).width(260).height(45)

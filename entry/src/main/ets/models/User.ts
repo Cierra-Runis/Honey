@@ -3,3 +3,13 @@ interface UserProfile {
   avatarUrl: string,
   description: string
 }
+
+interface LoginRequest {
+  username: string,
+  password: string
+}
+
+interface LoginResponse {
+  message: string,
+  password: string | undefined
+}

@@ -20,7 +20,7 @@ struct LoginPage {
     Column() {
       Row() {
         Image($r("app.media.loginu")).width(25).margin({ right: 5, top: 0 })
-        TextInput({ placeholder: "用户名/邮箱/手机号" })
+        TextInput({ placeholder: "用户名" })
           .onChange((value) => {
             this.username = value
           }).width(260).height(45)
@@ -44,7 +44,7 @@ struct LoginPage {
         .padding({ left: 100, right: 100 })
         .height(45)
         .margin({ top: 0 })
-        .onClick(() => {
+        .onClick(async () => {
           //前端验证
           if (this.username.length < 4) {
             promptAction.showToast({ message: '用户名长度需 >= 4' })
@@ -55,8 +55,8 @@ struct LoginPage {
             return
           }
           // 后端请求
-          let a = this.sendLoginMsg({ username: this.username, pwd: this.password })
-          router.pushUrl({ url: 'pages/HomePage' }) //测试用，连接后端后请注释掉
+          await this.sendLoginMsg({ username: this.username, password: this.password })
+
         })
         .margin({ top: 30 })
 
@@ -83,26 +83,37 @@ struct LoginPage {
   }
 
   async sendLoginMsg(params: object) {
-    // 1.创建
-    let httprequest = http.createHttp()
+    try {
+      // 1.创建
+      let httprequest = http.createHttp()
 
-    httprequest.request("https://127.0.0.1:8080",
-      {
-        method: http.RequestMethod.POST,
-        extraData: params
-      },
-      (err, data) => {
-        if (err) {
-          return promptAction.showToast({ message: "登录失败" })
+      console.log(params.toString())
+
+      let response = await httprequest.request("http://127.0.0.1:8080/user/login",
+        {
+          method: http.RequestMethod.POST,
+          extraData: params
         }
-        if (JSON.parse(data.result.toString()).code == 200) {
-          promptAction.showToast({ message: '登录成功' })
-          router.pushUrl({ url: 'pages/HomePage' })
-        }
-      }
-    )
-    // 3.销毁
-    httprequest.destroy()
+      );
+      // 3.销毁
+      httprequest.destroy()
+
+      if (response.responseCode != 200) return promptAction.showToast({ message: '登录失败' });
+
+      let json = JSON.parse(response.result.toString());
+
+      console.log(json.toString())
+
+      // if (err) {
+      //   return promptAction.showToast({ message: "登录失败" })
+      // }
+      promptAction.showToast({ message: '登录成功' })
+      // router.pushUrl({ url: 'pages/HomePage' })
+
+    } catch (e) {
+      console.log(e)
+    }
+
 
   }
 
