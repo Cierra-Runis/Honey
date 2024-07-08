@@ -1,5 +1,4 @@
-import 'package:dart_frog/dart_frog.dart';
-import 'package:server/database/isar.dart';
+import 'package:server/index.dart';
 
 Handler middleware(Handler handler) => handler
     .use(requestLogger())

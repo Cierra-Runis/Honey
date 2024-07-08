@@ -1,7 +1,4 @@
-import 'package:dart_frog/dart_frog.dart';
-import 'package:dart_frog_auth/dart_frog_auth.dart';
-import 'package:server/database/isar.dart';
-import 'package:server/database/user.dart';
+import 'package:server/index.dart';
 
 Handler middleware(Handler handler) => handler.use(
       bearerAuthentication<User>(

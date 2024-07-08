@@ -1,6 +1,4 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:isar/isar.dart';
-import 'package:server/models/user/login.dart';
+import 'package:server/index.dart';
 
 part 'hitokoto.freezed.dart';
 part 'hitokoto.g.dart';

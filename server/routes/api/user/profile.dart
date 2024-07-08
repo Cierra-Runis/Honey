@@ -1,9 +1,4 @@
-import 'dart:io';
-
-import 'package:dart_frog/dart_frog.dart';
-import 'package:server/database/isar.dart';
-import 'package:server/database/user.dart';
-import 'package:server/models/user/profile.dart';
+import 'package:server/index.dart';
 
 Future<Response> onRequest(RequestContext context) async {
   return switch (context.request.method) {

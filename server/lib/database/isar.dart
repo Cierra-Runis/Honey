@@ -1,20 +1,9 @@
-import 'dart:io';
-import 'dart:math';
-
-import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
-import 'package:isar/isar.dart';
-import 'package:server/database/hitokoto.dart';
-import 'package:server/database/user.dart';
-import 'package:server/models/user/login.dart';
-import 'package:server/models/user/profile.dart';
-import 'package:server/models/user/register.dart';
+import 'package:server/index.dart';
 
 class IsarDatabase {
   factory IsarDatabase() => _instance;
 
   IsarDatabase._internal() {
-    print('Init');
-    print(Directory.current);
     _isar = Isar.open(
       schemas: [
         UserSchema,

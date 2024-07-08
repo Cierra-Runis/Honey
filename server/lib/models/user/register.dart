@@ -1,6 +1,4 @@
-import 'package:dart_frog/dart_frog.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:server/models/user/login.dart';
+import 'package:server/index.dart';
 
 part 'register.freezed.dart';
 part 'register.g.dart';
