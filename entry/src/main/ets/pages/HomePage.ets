@@ -21,15 +21,9 @@ export struct HomePage {
     }
 
   @Builder AppbarAction() {
-    Row({ space: 8 }) {
-      Button() {
-        Image($r('app.media.ic_public_refresh')).width(20).margin(8)
-      }.backgroundColor(Color.Transparent)
-
-      Button() {
-        Image($r('app.media.ic_public_refresh')).width(20).margin(8)
-      }.backgroundColor(Color.Transparent)
-    }.justifyContent(FlexAlign.End)
+    Button() {
+      Image($r('app.media.ic_public_refresh')).width(20).margin(8)
+    }.backgroundColor(Color.Transparent)
   }
 
   build() {

@@ -90,7 +90,7 @@ struct RegisterPage {
     // 1.创建
     let httprequest = http.createHttp()
 
-     await httprequest.request("https://127.0.0.1:8080",
+    httprequest.request("https://127.0.0.1:8080",
       {
         method:http.RequestMethod.POST,
         extraData:params
