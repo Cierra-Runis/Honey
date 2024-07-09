@@ -1,10 +1,11 @@
 import promptAction from '@ohos.promptAction'
 import http from '@ohos.net.http'
 import router from '@ohos.router'
-
-@Entry
+@Entry()
 @Component
 struct LoginPage {
+  //appStorage层未找到token 则赋值test2
+  @StorageLink('token') token : string = 'test2';
   username: string = ''
   password: string = ''
   // 匹配字符串
@@ -45,6 +46,7 @@ struct LoginPage {
         .height(45)
         .margin({ top: 0 })
         .onClick(async () => {
+          return promptAction.showToast({ message: this.token });
           //前端验证
           if (this.username.length < 4) {
             promptAction.showToast({ message: '用户名长度需 >= 4' })
@@ -97,11 +99,17 @@ struct LoginPage {
       );
       // 3.销毁
       httprequest.destroy()
-
+      // http通畅
       if (response.responseCode != 200) return promptAction.showToast({ message: '登录失败' });
 
       let json = JSON.parse(response.result.toString());
-
+      // 服务端客户端通信正常下密码或用户名错误
+      if(!(json.code == 10000))
+      {
+        return promptAction.showToast({ message: '用户名或密码错误' });
+      }
+      //获取token
+      this.token = json.token;
       console.log(json.toString())
 
       // if (err) {
