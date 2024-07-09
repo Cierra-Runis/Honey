@@ -46,7 +46,6 @@ struct LoginPage {
         .height(45)
         .margin({ top: 0 })
         .onClick(async () => {
-          return promptAction.showToast({ message: this.token });
           //前端验证
           if (this.username.length < 4) {
             promptAction.showToast({ message: '用户名长度需 >= 4' })
