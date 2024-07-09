@@ -22,7 +22,7 @@ class IsarDatabase {
   static String generateToken({
     required User user,
   }) {
-    final jwt = JWT({'username': user.username});
+    final jwt = JWT({'userId': user.id});
     return jwt.sign(SecretKey('123'));
   }
 
@@ -30,12 +30,15 @@ class IsarDatabase {
     try {
       final payload = JWT.verify(token, SecretKey('123'));
       final payloadData = payload.payload as Json;
-      final username = payloadData['username'] as String;
-      return findUniqueUserByUsername(username);
+      final userId = payloadData['userId'] as int;
+      return findUniqueUserByUserId(userId);
     } catch (e) {
       return null;
     }
   }
+
+  User? findUniqueUserByUserId(int value) =>
+      _isar.users.where().idEqualTo(value).findFirst();
 
   User? findUniqueUserByUsername(String value) =>
       _isar.users.where().usernameEqualTo(value).findFirst();
