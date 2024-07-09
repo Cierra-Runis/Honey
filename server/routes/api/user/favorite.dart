@@ -9,7 +9,7 @@ Future<Response> onRequest(RequestContext context) async {
 }
 
 Future<Response> _get(RequestContext context) async {
-  final request = await UserFavoritePostRequest.fromRequest(context.request);
+  final request = await UserProfileGetRequest.fromRequest(context.request);
   if (request == null) {
     return Response.json(
       statusCode: HttpStatus.badRequest,
