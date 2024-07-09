@@ -8,6 +8,7 @@ class IsarDatabase {
       schemas: [
         UserSchema,
         UserProfileSchema,
+        UserFavoriteSchema,
         HitokotoSchema,
       ],
       directory: Directory.current.path,
@@ -21,7 +22,7 @@ class IsarDatabase {
   static String generateToken({
     required User user,
   }) {
-    final jwt = JWT({'username': user.username});
+    final jwt = JWT({'userId': user.id});
     return jwt.sign(SecretKey('123'));
   }
 
@@ -29,12 +30,15 @@ class IsarDatabase {
     try {
       final payload = JWT.verify(token, SecretKey('123'));
       final payloadData = payload.payload as Json;
-      final username = payloadData['username'] as String;
-      return findUniqueUserByUsername(username);
+      final userId = payloadData['userId'] as int;
+      return findUniqueUserByUserId(userId);
     } catch (e) {
       return null;
     }
   }
+
+  User? findUniqueUserByUserId(int value) =>
+      _isar.users.where().idEqualTo(value).findFirst();
 
   User? findUniqueUserByUsername(String value) =>
       _isar.users.where().usernameEqualTo(value).findFirst();
@@ -110,5 +114,59 @@ class IsarDatabase {
 
   Hitokoto? findUniqueHitokotoByUUID(String uuid) {
     return _isar.hitokotos.where().uuidEqualTo(uuid).findFirst();
+  }
+
+  Hitokoto? createHitokotoByHitokotoPostRequest(HitokotoPostRequest request) {
+    try {
+      final hitokoto = Hitokoto(
+        id: _isar.hitokotos.autoIncrement(),
+        uuid: const UuidV4().generate(),
+        hitokoto: request.hitokoto,
+        type: request.type,
+        source: request.source,
+        creatorId: request.creatorId,
+        createAt: DateTime.now(),
+        sourceWho: request.sourceWho,
+      );
+      _isar.write((isar) => _isar.hitokotos.put(hitokoto));
+      return hitokoto;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  List<Hitokoto> findHitokotosCreatedByUserId(int userId) {
+    return _isar.hitokotos.where().creatorIdEqualTo(userId).findAll();
+  }
+
+  List<UserFavorite> findUserFavoritesByUserId(int userId) {
+    return _isar.userFavorites
+        .where()
+        .userIdEqualTo(userId)
+        .findAll()
+        .nonNulls
+        .toList();
+  }
+
+  UserFavorite? createUserFavoriteByUserFavoritePostRequest(
+    UserFavoritePostRequest request,
+  ) {
+    final favorite = UserFavorite(
+      id: _isar.userFavorites.autoIncrement(),
+      userId: request.userId,
+      hitokotoId: request.hitokotoId,
+    );
+
+    final hasFavorite = findUserFavoritesByUserId(request.userId)
+        .where((element) => element.hitokotoId == request.hitokotoId);
+
+    if (hasFavorite.isNotEmpty) return null;
+
+    try {
+      _isar.write((isar) => isar.userFavorites.put(favorite));
+      return favorite;
+    } catch (e) {
+      return null;
+    }
   }
 }
