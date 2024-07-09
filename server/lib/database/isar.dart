@@ -113,20 +113,21 @@ class IsarDatabase {
   }
 
   Hitokoto? createHitokotoByHitokotoPostRequest(HitokotoPostRequest request) {
-    _isar.write(
-      (isar) => _isar.hitokotos.put(
-        Hitokoto(
-          id: _isar.hitokotos.autoIncrement(),
-          uuid: const UuidV4().generate(),
-          hitokoto: request.hitokoto,
-          type: request.type,
-          source: request.source,
-          creatorId: request.creatorId,
-          createAt: DateTime.now(),
-          sourceWho: request.sourceWho,
-        ),
-      ),
-    );
-    return null;
+    try {
+      final hitokoto = Hitokoto(
+        id: _isar.hitokotos.autoIncrement(),
+        uuid: const UuidV4().generate(),
+        hitokoto: request.hitokoto,
+        type: request.type,
+        source: request.source,
+        creatorId: request.creatorId,
+        createAt: DateTime.now(),
+        sourceWho: request.sourceWho,
+      );
+      _isar.write((isar) => _isar.hitokotos.put(hitokoto));
+      return hitokoto;
+    } catch (e) {
+      return null;
+    }
   }
 }

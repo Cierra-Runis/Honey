@@ -32,4 +32,17 @@ Future<Response> _post(RequestContext context) async {
   if (user.id != request.creatorId) {
     return Response.json(statusCode: HttpStatus.forbidden);
   }
+
+  final database = context.read<IsarDatabase>();
+  final hitokoto = database.createHitokotoByHitokotoPostRequest(request);
+  if (hitokoto == null) {
+    return Response.json(
+      statusCode: HttpStatus.internalServerError,
+      body: const HitokotoResponse(message: '创建失败'),
+    );
+  }
+
+  return Response.json(
+    body: HitokotoResponse(message: '创建成功', hitokoto: hitokoto),
+  );
 }
