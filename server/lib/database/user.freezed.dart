@@ -486,3 +486,179 @@ abstract class _UserProfile implements UserProfile {
   _$$UserProfileImplCopyWith<_$UserProfileImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+UserFavorite _$UserFavoriteFromJson(Map<String, dynamic> json) {
+  return _UserFavorite.fromJson(json);
+}
+
+/// @nodoc
+mixin _$UserFavorite {
+  @Id()
+  int get id => throw _privateConstructorUsedError;
+  int get userId => throw _privateConstructorUsedError;
+  int get hitokotoId => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $UserFavoriteCopyWith<UserFavorite> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $UserFavoriteCopyWith<$Res> {
+  factory $UserFavoriteCopyWith(
+          UserFavorite value, $Res Function(UserFavorite) then) =
+      _$UserFavoriteCopyWithImpl<$Res, UserFavorite>;
+  @useResult
+  $Res call({@Id() int id, int userId, int hitokotoId});
+}
+
+/// @nodoc
+class _$UserFavoriteCopyWithImpl<$Res, $Val extends UserFavorite>
+    implements $UserFavoriteCopyWith<$Res> {
+  _$UserFavoriteCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? userId = null,
+    Object? hitokotoId = null,
+  }) {
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as int,
+      hitokotoId: null == hitokotoId
+          ? _value.hitokotoId
+          : hitokotoId // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$UserFavoriteImplCopyWith<$Res>
+    implements $UserFavoriteCopyWith<$Res> {
+  factory _$$UserFavoriteImplCopyWith(
+          _$UserFavoriteImpl value, $Res Function(_$UserFavoriteImpl) then) =
+      __$$UserFavoriteImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({@Id() int id, int userId, int hitokotoId});
+}
+
+/// @nodoc
+class __$$UserFavoriteImplCopyWithImpl<$Res>
+    extends _$UserFavoriteCopyWithImpl<$Res, _$UserFavoriteImpl>
+    implements _$$UserFavoriteImplCopyWith<$Res> {
+  __$$UserFavoriteImplCopyWithImpl(
+      _$UserFavoriteImpl _value, $Res Function(_$UserFavoriteImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? userId = null,
+    Object? hitokotoId = null,
+  }) {
+    return _then(_$UserFavoriteImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as int,
+      hitokotoId: null == hitokotoId
+          ? _value.hitokotoId
+          : hitokotoId // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$UserFavoriteImpl implements _UserFavorite {
+  const _$UserFavoriteImpl(
+      {@Id() required this.id, required this.userId, required this.hitokotoId});
+
+  factory _$UserFavoriteImpl.fromJson(Map<String, dynamic> json) =>
+      _$$UserFavoriteImplFromJson(json);
+
+  @override
+  @Id()
+  final int id;
+  @override
+  final int userId;
+  @override
+  final int hitokotoId;
+
+  @override
+  String toString() {
+    return 'UserFavorite(id: $id, userId: $userId, hitokotoId: $hitokotoId)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UserFavoriteImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.hitokotoId, hitokotoId) ||
+                other.hitokotoId == hitokotoId));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, id, userId, hitokotoId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UserFavoriteImplCopyWith<_$UserFavoriteImpl> get copyWith =>
+      __$$UserFavoriteImplCopyWithImpl<_$UserFavoriteImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$UserFavoriteImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _UserFavorite implements UserFavorite {
+  const factory _UserFavorite(
+      {@Id() required final int id,
+      required final int userId,
+      required final int hitokotoId}) = _$UserFavoriteImpl;
+
+  factory _UserFavorite.fromJson(Map<String, dynamic> json) =
+      _$UserFavoriteImpl.fromJson;
+
+  @override
+  @Id()
+  int get id;
+  @override
+  int get userId;
+  @override
+  int get hitokotoId;
+  @override
+  @JsonKey(ignore: true)
+  _$$UserFavoriteImplCopyWith<_$UserFavoriteImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}

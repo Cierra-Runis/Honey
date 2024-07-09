@@ -1,13 +1,12 @@
 
-
 class Token {
-
-  static initLocalUser() {
-    PersistentStorage.PersistProp(TOKEN_KEY, '{}');
+  private static TOKEN_KEY = '';
+  static init() {
+    PersistentStorage.PersistProp(this.TOKEN_KEY, '{}');
   }
   // 获取存储的 token
   static getToken(): string | undefined {
-    const str = AppStorage.Get<string>(TOKEN_KEY) || '{}';
+    const str = AppStorage.Get<string>(this.TOKEN_KEY) || '{}';
     return str ? str : undefined;
   }
 
@@ -16,7 +15,7 @@ class Token {
   static saveToken(token: string): boolean {
 
     try {
-      AppStorage.Set(TOKEN_KEY, token);
+      AppStorage.Set(this.TOKEN_KEY, token);
       return true;
     } catch (error) {
       console.error('Failed to save token:', error);

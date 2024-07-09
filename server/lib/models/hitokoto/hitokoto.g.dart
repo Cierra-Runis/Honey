@@ -6,6 +6,26 @@ part of 'hitokoto.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+_$HitokotoPostRequestImpl _$$HitokotoPostRequestImplFromJson(
+        Map<String, dynamic> json) =>
+    _$HitokotoPostRequestImpl(
+      hitokoto: json['hitokoto'] as String,
+      type: json['type'] as String,
+      source: json['source'] as String,
+      creatorId: (json['creatorId'] as num).toInt(),
+      sourceWho: json['sourceWho'] as String?,
+    );
+
+Map<String, dynamic> _$$HitokotoPostRequestImplToJson(
+        _$HitokotoPostRequestImpl instance) =>
+    <String, dynamic>{
+      'hitokoto': instance.hitokoto,
+      'type': instance.type,
+      'source': instance.source,
+      'creatorId': instance.creatorId,
+      'sourceWho': instance.sourceWho,
+    };
+
 _$HitokotoResponseImpl _$$HitokotoResponseImplFromJson(
         Map<String, dynamic> json) =>
     _$HitokotoResponseImpl(

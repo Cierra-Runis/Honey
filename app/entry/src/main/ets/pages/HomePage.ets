@@ -1,38 +1,55 @@
 import ArrayList from '@ohos.util.ArrayList'
-import { Hitokoto } from '../models/Hitokoto'
+import http from '@ohos.net.http';
+import { Hitokoto, HitokotoResponse } from '../models/Hitokoto'
+import promptAction from '@ohos.promptAction';
 
 @Entry
 @Component
 export struct HomePage {
-  private hitokoto: Hitokoto =
-    {
-      "id": 9269,
-      "uuid": "4fe95780-e679-44fc-a8a4-f963077c13c7",
-      "hitokoto": "没有相同的经历是无法相互感受的。",
-      "type": "a",
-      "from": "火影忍者",
-      "from_who": "佩恩",
-      "creator": "空吧",
-      "creator_uid": 14633,
-      "reviewer": 4756,
-      "commit_from": "web",
-      "created_at": "1681565935",
-      "length": 16
+  @State hitokoto : Hitokoto | undefined = undefined;
+
+  aboutToAppear() {
+    this.fetch()
+  }
+
+  async fetch() {
+    try {
+      let dio = http.createHttp();
+      let response = await dio.request('http://localhost:8080/api/hitokoto')
+      dio.destroy()
+
+      let hitokoto = JSON.parse(response.result.toString()) as HitokotoResponse
+
+      if (hitokoto.hitokoto === undefined) {
+        return promptAction.showToast({message:'获取失败'});
+      }
+
+      this.hitokoto = hitokoto.hitokoto;
+    } catch (e) {
+      console.log(e)
+      promptAction.showToast({message:`错误 ${e}`})
     }
+  }
 
   @Builder AppbarAction() {
     Button() {
       Image($r('app.media.ic_public_refresh')).width(20).margin(8)
-    }.backgroundColor(Color.Transparent)
+    }.backgroundColor(Color.Transparent).onClick(() => {
+      this.fetch()
+    })
   }
 
   build() {
     Navigation() {
       Column() {
 
+      if(this.hitokoto === undefined) {
+        LoadingProgress().width(100).height(100)
+      } else {
         HitokotoItem({ content: this.hitokoto })
-
       }
+
+      }.height('100%').justifyContent(FlexAlign.Center)
     }.title('Honey')
     .menus(this.AppbarAction())
   }
@@ -40,14 +57,17 @@ export struct HomePage {
 
 @Component
 struct HitokotoItem {
-  private content: Hitokoto;
+ @Link private content: Hitokoto;
 
   build() {
     Column({ space: 8 }) {
 
-      Column() {
+      Column({space: 8}) {
         Text('「').width('100%')
-        Text(this.content.hitokoto)
+        Text(this.content.hitokoto).padding({left:12,right:12})
+        Row() {
+          Text(`——${this.content.source}`)
+        }.width('100%').justifyContent(FlexAlign.End).padding({right: 12})
         Row() {
           Text('」')
         }.width('100%').justifyContent(FlexAlign.End)
