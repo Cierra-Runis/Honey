@@ -111,4 +111,22 @@ class IsarDatabase {
   Hitokoto? findUniqueHitokotoByUUID(String uuid) {
     return _isar.hitokotos.where().uuidEqualTo(uuid).findFirst();
   }
+
+  Hitokoto? createHitokotoByHitokotoPostRequest(HitokotoPostRequest request) {
+    _isar.write(
+      (isar) => _isar.hitokotos.put(
+        Hitokoto(
+          id: _isar.hitokotos.autoIncrement(),
+          uuid: const UuidV4().generate(),
+          hitokoto: request.hitokoto,
+          type: request.type,
+          source: request.source,
+          creatorId: request.creatorId,
+          createAt: DateTime.now(),
+          sourceWho: request.sourceWho,
+        ),
+      ),
+    );
+    return null;
+  }
 }
