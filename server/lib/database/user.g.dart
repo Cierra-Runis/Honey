@@ -2451,6 +2451,618 @@ extension UserProfileQueryProperty3<R1, R2>
   }
 }
 
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, invalid_use_of_protected_member, lines_longer_than_80_chars, constant_identifier_names, avoid_js_rounded_ints, no_leading_underscores_for_local_identifiers, require_trailing_commas, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_in_if_null_operators, library_private_types_in_public_api, prefer_const_constructors
+// ignore_for_file: type=lint
+
+extension GetUserFavoriteCollection on Isar {
+  IsarCollection<int, UserFavorite> get userFavorites => this.collection();
+}
+
+const UserFavoriteSchema = IsarGeneratedSchema(
+  schema: IsarSchema(
+    name: 'UserFavorite',
+    idName: 'id',
+    embedded: false,
+    properties: [
+      IsarPropertySchema(
+        name: 'userId',
+        type: IsarType.long,
+      ),
+      IsarPropertySchema(
+        name: 'hitokotoId',
+        type: IsarType.long,
+      ),
+    ],
+    indexes: [],
+  ),
+  converter: IsarObjectConverter<int, UserFavorite>(
+    serialize: serializeUserFavorite,
+    deserialize: deserializeUserFavorite,
+    deserializeProperty: deserializeUserFavoriteProp,
+  ),
+  embeddedSchemas: [],
+);
+
+@isarProtected
+int serializeUserFavorite(IsarWriter writer, UserFavorite object) {
+  IsarCore.writeLong(writer, 1, object.userId);
+  IsarCore.writeLong(writer, 2, object.hitokotoId);
+  return object.id;
+}
+
+@isarProtected
+UserFavorite deserializeUserFavorite(IsarReader reader) {
+  final int _id;
+  _id = IsarCore.readId(reader);
+  final int _userId;
+  _userId = IsarCore.readLong(reader, 1);
+  final int _hitokotoId;
+  _hitokotoId = IsarCore.readLong(reader, 2);
+  final object = UserFavorite(
+    id: _id,
+    userId: _userId,
+    hitokotoId: _hitokotoId,
+  );
+  return object;
+}
+
+@isarProtected
+dynamic deserializeUserFavoriteProp(IsarReader reader, int property) {
+  switch (property) {
+    case 0:
+      return IsarCore.readId(reader);
+    case 1:
+      return IsarCore.readLong(reader, 1);
+    case 2:
+      return IsarCore.readLong(reader, 2);
+    default:
+      throw ArgumentError('Unknown property: $property');
+  }
+}
+
+sealed class _UserFavoriteUpdate {
+  bool call({
+    required int id,
+    int? userId,
+    int? hitokotoId,
+  });
+}
+
+class _UserFavoriteUpdateImpl implements _UserFavoriteUpdate {
+  const _UserFavoriteUpdateImpl(this.collection);
+
+  final IsarCollection<int, UserFavorite> collection;
+
+  @override
+  bool call({
+    required int id,
+    Object? userId = ignore,
+    Object? hitokotoId = ignore,
+  }) {
+    return collection.updateProperties([
+          id
+        ], {
+          if (userId != ignore) 1: userId as int?,
+          if (hitokotoId != ignore) 2: hitokotoId as int?,
+        }) >
+        0;
+  }
+}
+
+sealed class _UserFavoriteUpdateAll {
+  int call({
+    required List<int> id,
+    int? userId,
+    int? hitokotoId,
+  });
+}
+
+class _UserFavoriteUpdateAllImpl implements _UserFavoriteUpdateAll {
+  const _UserFavoriteUpdateAllImpl(this.collection);
+
+  final IsarCollection<int, UserFavorite> collection;
+
+  @override
+  int call({
+    required List<int> id,
+    Object? userId = ignore,
+    Object? hitokotoId = ignore,
+  }) {
+    return collection.updateProperties(id, {
+      if (userId != ignore) 1: userId as int?,
+      if (hitokotoId != ignore) 2: hitokotoId as int?,
+    });
+  }
+}
+
+extension UserFavoriteUpdate on IsarCollection<int, UserFavorite> {
+  _UserFavoriteUpdate get update => _UserFavoriteUpdateImpl(this);
+
+  _UserFavoriteUpdateAll get updateAll => _UserFavoriteUpdateAllImpl(this);
+}
+
+sealed class _UserFavoriteQueryUpdate {
+  int call({
+    int? userId,
+    int? hitokotoId,
+  });
+}
+
+class _UserFavoriteQueryUpdateImpl implements _UserFavoriteQueryUpdate {
+  const _UserFavoriteQueryUpdateImpl(this.query, {this.limit});
+
+  final IsarQuery<UserFavorite> query;
+  final int? limit;
+
+  @override
+  int call({
+    Object? userId = ignore,
+    Object? hitokotoId = ignore,
+  }) {
+    return query.updateProperties(limit: limit, {
+      if (userId != ignore) 1: userId as int?,
+      if (hitokotoId != ignore) 2: hitokotoId as int?,
+    });
+  }
+}
+
+extension UserFavoriteQueryUpdate on IsarQuery<UserFavorite> {
+  _UserFavoriteQueryUpdate get updateFirst =>
+      _UserFavoriteQueryUpdateImpl(this, limit: 1);
+
+  _UserFavoriteQueryUpdate get updateAll => _UserFavoriteQueryUpdateImpl(this);
+}
+
+class _UserFavoriteQueryBuilderUpdateImpl implements _UserFavoriteQueryUpdate {
+  const _UserFavoriteQueryBuilderUpdateImpl(this.query, {this.limit});
+
+  final QueryBuilder<UserFavorite, UserFavorite, QOperations> query;
+  final int? limit;
+
+  @override
+  int call({
+    Object? userId = ignore,
+    Object? hitokotoId = ignore,
+  }) {
+    final q = query.build();
+    try {
+      return q.updateProperties(limit: limit, {
+        if (userId != ignore) 1: userId as int?,
+        if (hitokotoId != ignore) 2: hitokotoId as int?,
+      });
+    } finally {
+      q.close();
+    }
+  }
+}
+
+extension UserFavoriteQueryBuilderUpdate
+    on QueryBuilder<UserFavorite, UserFavorite, QOperations> {
+  _UserFavoriteQueryUpdate get updateFirst =>
+      _UserFavoriteQueryBuilderUpdateImpl(this, limit: 1);
+
+  _UserFavoriteQueryUpdate get updateAll =>
+      _UserFavoriteQueryBuilderUpdateImpl(this);
+}
+
+extension UserFavoriteQueryFilter
+    on QueryBuilder<UserFavorite, UserFavorite, QFilterCondition> {
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition> idEqualTo(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EqualCondition(
+          property: 0,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition> idGreaterThan(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterCondition(
+          property: 0,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      idGreaterThanOrEqualTo(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(
+          property: 0,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition> idLessThan(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessCondition(
+          property: 0,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      idLessThanOrEqualTo(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessOrEqualCondition(
+          property: 0,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition> idBetween(
+    int lower,
+    int upper,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        BetweenCondition(
+          property: 0,
+          lower: lower,
+          upper: upper,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition> userIdEqualTo(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EqualCondition(
+          property: 1,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      userIdGreaterThan(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterCondition(
+          property: 1,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      userIdGreaterThanOrEqualTo(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(
+          property: 1,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      userIdLessThan(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessCondition(
+          property: 1,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      userIdLessThanOrEqualTo(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessOrEqualCondition(
+          property: 1,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition> userIdBetween(
+    int lower,
+    int upper,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        BetweenCondition(
+          property: 1,
+          lower: lower,
+          upper: upper,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      hitokotoIdEqualTo(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EqualCondition(
+          property: 2,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      hitokotoIdGreaterThan(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterCondition(
+          property: 2,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      hitokotoIdGreaterThanOrEqualTo(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(
+          property: 2,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      hitokotoIdLessThan(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessCondition(
+          property: 2,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      hitokotoIdLessThanOrEqualTo(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessOrEqualCondition(
+          property: 2,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      hitokotoIdBetween(
+    int lower,
+    int upper,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        BetweenCondition(
+          property: 2,
+          lower: lower,
+          upper: upper,
+        ),
+      );
+    });
+  }
+}
+
+extension UserFavoriteQueryObject
+    on QueryBuilder<UserFavorite, UserFavorite, QFilterCondition> {}
+
+extension UserFavoriteQuerySortBy
+    on QueryBuilder<UserFavorite, UserFavorite, QSortBy> {
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy> sortById() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(0);
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy> sortByIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(0, sort: Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy> sortByUserId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(1);
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy> sortByUserIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(1, sort: Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy> sortByHitokotoId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(2);
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy>
+      sortByHitokotoIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(2, sort: Sort.desc);
+    });
+  }
+}
+
+extension UserFavoriteQuerySortThenBy
+    on QueryBuilder<UserFavorite, UserFavorite, QSortThenBy> {
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy> thenById() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(0);
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy> thenByIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(0, sort: Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy> thenByUserId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(1);
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy> thenByUserIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(1, sort: Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy> thenByHitokotoId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(2);
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy>
+      thenByHitokotoIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(2, sort: Sort.desc);
+    });
+  }
+}
+
+extension UserFavoriteQueryWhereDistinct
+    on QueryBuilder<UserFavorite, UserFavorite, QDistinct> {
+  QueryBuilder<UserFavorite, UserFavorite, QAfterDistinct> distinctByUserId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(1);
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterDistinct>
+      distinctByHitokotoId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(2);
+    });
+  }
+}
+
+extension UserFavoriteQueryProperty1
+    on QueryBuilder<UserFavorite, UserFavorite, QProperty> {
+  QueryBuilder<UserFavorite, int, QAfterProperty> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(0);
+    });
+  }
+
+  QueryBuilder<UserFavorite, int, QAfterProperty> userIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(1);
+    });
+  }
+
+  QueryBuilder<UserFavorite, int, QAfterProperty> hitokotoIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(2);
+    });
+  }
+}
+
+extension UserFavoriteQueryProperty2<R>
+    on QueryBuilder<UserFavorite, R, QAfterProperty> {
+  QueryBuilder<UserFavorite, (R, int), QAfterProperty> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(0);
+    });
+  }
+
+  QueryBuilder<UserFavorite, (R, int), QAfterProperty> userIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(1);
+    });
+  }
+
+  QueryBuilder<UserFavorite, (R, int), QAfterProperty> hitokotoIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(2);
+    });
+  }
+}
+
+extension UserFavoriteQueryProperty3<R1, R2>
+    on QueryBuilder<UserFavorite, (R1, R2), QAfterProperty> {
+  QueryBuilder<UserFavorite, (R1, R2, int), QOperations> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(0);
+    });
+  }
+
+  QueryBuilder<UserFavorite, (R1, R2, int), QOperations> userIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(1);
+    });
+  }
+
+  QueryBuilder<UserFavorite, (R1, R2, int), QOperations> hitokotoIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(2);
+    });
+  }
+}
+
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
@@ -2490,4 +3102,18 @@ Map<String, dynamic> _$$UserProfileImplToJson(_$UserProfileImpl instance) =>
       'createAt': instance.createAt.toIso8601String(),
       'editAt': instance.editAt.toIso8601String(),
       'avatarId': instance.avatarId,
+    };
+
+_$UserFavoriteImpl _$$UserFavoriteImplFromJson(Map<String, dynamic> json) =>
+    _$UserFavoriteImpl(
+      id: (json['id'] as num).toInt(),
+      userId: (json['userId'] as num).toInt(),
+      hitokotoId: (json['hitokotoId'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$$UserFavoriteImplToJson(_$UserFavoriteImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'userId': instance.userId,
+      'hitokotoId': instance.hitokotoId,
     };

@@ -8,6 +8,7 @@ class IsarDatabase {
       schemas: [
         UserSchema,
         UserProfileSchema,
+        UserFavoriteSchema,
         HitokotoSchema,
       ],
       directory: Directory.current.path,
@@ -126,6 +127,36 @@ class IsarDatabase {
       );
       _isar.write((isar) => _isar.hitokotos.put(hitokoto));
       return hitokoto;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  List<Hitokoto> findHitokotosCreatedByUserId(int userId) {
+    return _isar.hitokotos.where().creatorIdEqualTo(userId).findAll();
+  }
+
+  List<UserFavorite> findUserFavoritesByUserId(int userId) {
+    return _isar.userFavorites
+        .where()
+        .userIdEqualTo(userId)
+        .findAll()
+        .nonNulls
+        .toList();
+  }
+
+  UserFavorite? createUserFavoriteByUserFavoritePostRequest(
+    UserFavoritePostRequest request,
+  ) {
+    final favorite = UserFavorite(
+      id: _isar.userFavorites.autoIncrement(),
+      userId: request.userId,
+      hitokotoId: request.hitokotoId,
+    );
+
+    try {
+      _isar.write((isar) => isar.userFavorites.put(favorite));
+      return favorite;
     } catch (e) {
       return null;
     }
