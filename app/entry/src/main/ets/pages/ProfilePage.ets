@@ -1,55 +1,8 @@
 import router from '@ohos.router';
+import http from '@ohos.net.http';
+import promptAction from '@ohos.promptAction';
+import {UserProfile,UserProfileGetRequest,UserProfileResponse} from '../models/User';
 
-class User {
-  id: number;
-  name: string;
-  email: string;
-  token: string;
-  email_verified_at: string | null; // 可以是字符串或者null
-  created_at: string; // 使用字符串表示日期时间
-  updated_at: string; // 使用字符串表示日期时间
-  startday: string; // 存储格式化后的日期字符串
-  upday: string;
-
-  constructor(id: number, name: string, email: string, token: string,
-              email_verified_at: string | null, created_at: string, updated_at: string) {
-    this.id = id;
-    this.name = name;
-    this.email = email;
-    this.token = token;
-    this.email_verified_at = email_verified_at;
-    this.created_at = created_at;
-    this.updated_at = updated_at;
-
-    // 格式化并存储开始日期
-    this.startday = this.formatDate(this.created_at);
-    this.upday = this.formatDate(this.updated_at)
-  }
-
-  private formatDate(dateTimeString: string): string {
-    const date = new Date(dateTimeString);
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    return `${year}年${month}月${day}日`;
-  }
-}
-
-// 示例数据
-let user = new User(
-  4943,
-  "啪啪啪",
-  "a632079@hitokoto.cn",
-  "EWq9Qq8H3LCW6Jiv3vnVCIqRy5Un08sDgaTztSX4",
-  null,
-  "2020-02-16T18:18:16.000000Z",
-  "2020-02-16T18:18:16.000000Z"
-);
-//邮箱是否验证
-let ema: String = "未验证";
-if (user.email_verified_at != null) {
-  ema = user.email_verified_at
-}
 
 //介绍样式
 @Extend(Text) function globalFancy() {
@@ -73,14 +26,70 @@ if (user.email_verified_at != null) {
 @Entry
 @Component
 struct ProfilePage {
+
+  formatDate(dateTimeString: string): string {
+    const date = new Date(dateTimeString);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${year}年${month}月${day}日`;
+  }
+
+  @State userID: UserProfileGetRequest = null;
+  @State user: UserProfile = {
+    id: 1,
+    userId: 1,
+    name: "haha",
+    description: "没有的",
+    createAt: 20020303,
+    editAt: 20030405,
+    avatarId: "???"
+  };
+  @State UserProfileResponse: UserProfileResponse = null;
+
+  //这里的参数params是userID
+  async fetch(params: UserProfileGetRequest) {
+    try {
+      let dio = http.createHttp();
+      let response = await dio.request('http://localhost:8080/', {
+        method: http.RequestMethod.GET,
+        extraData: params
+      });
+      dio.destroy();
+
+      let userProfileResponse: UserProfileResponse = JSON.parse(response.result.toString());
+      if (userProfileResponse.profile === undefined) {
+        promptAction.showToast({ message: '获取失败' });
+      } else {
+        this.user = userProfileResponse.profile;
+        this.UserProfileResponse = userProfileResponse;
+      }
+    } catch (e) {
+      console.log(e);
+      promptAction.showToast({ message: `错误 ${e}` });
+    }
+  }
+
+  //页面自动调用请求函数，拿到信息
+  onInit() {
+    if (this.userID) {
+      this.fetch(this.userID);
+    } else {
+      console.warn('userID is null, cannot fetch user profile.');
+    }
+  }
+
+
   build() {
     Navigation() {
       Column() {
+
         //头像
         Column({ space: 8 }) {
           Image($r("app.media.icon")).width(64)
-          Text(user.name).fontSize(18).borderStyle(BorderStyle.Solid)
-        }
+          //没有名字吗？
+          Text(this.user.name).fontSize(18).borderStyle(BorderStyle.Solid)
+        }.backgroundColor(Color.Black)
         .width("80%")
         .height("20%")
         .padding(15)
@@ -92,24 +101,21 @@ struct ProfilePage {
         //个人信息
         Column() {
           Row() {
-            Text("电子邮箱").fontSize(15).globalFancy()
-            Text(user.email).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1)
+            Text("个性标签").fontSize(15).globalFancy()
+            Text( this.user.description ).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1)
 
           }.rowFancy()
 
           Row() {
             Text("创建时间").fontSize(15).globalFancy()
-            Text(user.startday).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1)
+            Text(this.formatDate(this.user.createAt.toString())).fontSize(15).borderStyle(BorderStyle.Solid)
+              .padding(10).layoutWeight(1)
           }.rowFancy()
 
           Row() {
             Text("更新时间").fontSize(15).globalFancy()
-            Text(user.upday).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1)
-          }.rowFancy()
-
-          Row() {
-            Text("邮箱验证").fontSize(15).globalFancy()
-            Text(ema.toString()).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1)
+            Text(this.formatDate(this.user.editAt.toString())).fontSize(15).borderStyle(BorderStyle.Solid)
+              .padding(10).layoutWeight(1)
           }.rowFancy()
 
           Image($r("app.media.ic_public_add_norm")).width(40).fillColor("#ff6d51dd")
@@ -127,7 +133,7 @@ struct ProfilePage {
         .borderRadius(10)
         .justifyContent(FlexAlign.Start)
 
-      }.width("100%").height("100%").backgroundColor("#ccc").justifyContent(FlexAlign.Center)
+      }.width("100%").height("100%").backgroundImage($r("app.media.changecolor")).backgroundImageSize(ImageSize.Cover)
     }.title('编辑个人信息').titleMode(NavigationTitleMode.Mini)
   }
 }
