@@ -1,10 +1,9 @@
 import router from '@ohos.router';
 import http from '@ohos.net.http';
 import promptAction from '@ohos.promptAction';
-import {UserProfile,UserProfileGetRequest,UserProfileResponse} from '../models/User';
+import { UserProfile, UserProfileGetRequest, UserProfileResponse } from '../models/User';
 
-
-//介绍样式
+// 介绍样式
 @Extend(Text) function globalFancy() {
   .padding({
     left: 10,
@@ -13,7 +12,8 @@ import {UserProfile,UserProfileGetRequest,UserProfileResponse} from '../models/U
     bottom: 10
   }).fontColor(Color.Gray).fontSize(17)
 }
-//row样式
+
+// row样式
 @Extend(Row) function rowFancy() {
   .width("80%").height("20%").justifyContent(FlexAlign.Start).border({
     width: { bottom: 1 },
@@ -21,7 +21,6 @@ import {UserProfile,UserProfileGetRequest,UserProfileResponse} from '../models/U
     style: BorderStyle.Solid
   })
 }
-
 
 @Entry
 @Component
@@ -47,7 +46,7 @@ struct ProfilePage {
   };
   @State UserProfileResponse: UserProfileResponse = null;
 
-  //这里的参数params是userID
+  // 这里的参数params是userID
   async fetch(params: UserProfileGetRequest) {
     try {
       let dio = http.createHttp();
@@ -70,7 +69,7 @@ struct ProfilePage {
     }
   }
 
-  //页面自动调用请求函数，拿到信息
+  // 页面自动调用请求函数，拿到信息
   onInit() {
     if (this.userID) {
       this.fetch(this.userID);
@@ -79,15 +78,13 @@ struct ProfilePage {
     }
   }
 
-
   build() {
     Navigation() {
       Column() {
-
-        //头像
+        // 头像
         Column({ space: 8 }) {
-          Image($r("app.media.icon")).width(64)
-          //没有名字吗？
+          Image(this.user.avatarId || $r("app.media.icon")).width(64)
+          // 没有名字吗？
           Text(this.user.name).fontSize(18).borderStyle(BorderStyle.Solid)
         }.backgroundColor(Color.Black)
         .width("80%")
@@ -98,12 +95,11 @@ struct ProfilePage {
         .borderRadius(10)
         .justifyContent(FlexAlign.Center)
 
-        //个人信息
+        // 个人信息
         Column() {
           Row() {
             Text("个性标签").fontSize(15).globalFancy()
-            Text( this.user.description ).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1)
-
+            Text(this.user.description).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1)
           }.rowFancy()
 
           Row() {
@@ -117,6 +113,13 @@ struct ProfilePage {
             Text(this.formatDate(this.user.editAt.toString())).fontSize(15).borderStyle(BorderStyle.Solid)
               .padding(10).layoutWeight(1)
           }.rowFancy()
+
+          Text("上传头像").fontSize(15).padding(10).fontColor(Color.Blue).onClick(() => {
+            router.push({
+              url: 'pages/UploadAvatarPage',
+              params: { avatarUrl: this.user.avatarId }  // 确保avatarId是有效的URL
+            })
+          })
 
           Image($r("app.media.ic_public_add_norm")).width(40).fillColor("#ff6d51dd")
             .margin({ top: 20 }).onClick(() => {

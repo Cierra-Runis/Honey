@@ -9,6 +9,7 @@
     "pages/UploadPage",
     "pages/ProfilePage",
     "pages/UserFavoritePage",
-    "pages/UserUploadPage"
+    "pages/UserUploadPage",
+    "pages/UploadAvatarPage"
   ]
 }
