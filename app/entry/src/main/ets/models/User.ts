@@ -1,4 +1,4 @@
-interface UserProfile {
+export interface UserProfile {
   id: number;
   userId: number;
   name: string;
@@ -18,11 +18,11 @@ interface LoginResponse {
   token: string | undefined;
 }
 
-interface UserProfileGetRequest {
+export interface UserProfileGetRequest {
   userId: number;
 }
 
-interface UserProfilePostRequest {
+export interface UserProfilePostRequest {
   id: number;
   userId: number;
   name: string;
@@ -30,7 +30,7 @@ interface UserProfilePostRequest {
   avatarId: string;
 }
 
-interface UserProfileResponse {
+export interface UserProfileResponse {
   message: string;
   profile: UserProfile | undefined;
 }
