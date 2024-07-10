@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:server/index.dart';
 
 class IsarDatabase {
@@ -48,7 +51,7 @@ class IsarDatabase {
       final user = User(
         id: _isar.users.autoIncrement(),
         username: request.username,
-        password: request.password,
+        password: sha256.convert(utf8.encode(request.password)).toString(),
         createAt: DateTime.now(),
         editAt: DateTime.now(),
       );
@@ -66,6 +69,7 @@ class IsarDatabase {
 
     final newUserProfile = UserProfile(
       id: _isar.userProfiles.autoIncrement(),
+      name: 'HoneyEr $userId',
       userId: userId,
       description: '',
       createAt: DateTime.now(),
@@ -90,6 +94,7 @@ class IsarDatabase {
       _isar.write(
         (isar) => isar.userProfiles.update(
           id: request.id,
+          name: request.name,
           userId: request.userId,
           description: request.description,
           editAt: DateTime.now(),

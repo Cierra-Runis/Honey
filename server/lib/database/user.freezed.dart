@@ -248,6 +248,7 @@ mixin _$UserProfile {
   @Id()
   int get id => throw _privateConstructorUsedError;
   int get userId => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   DateTime get createAt => throw _privateConstructorUsedError;
   DateTime get editAt => throw _privateConstructorUsedError;
@@ -268,6 +269,7 @@ abstract class $UserProfileCopyWith<$Res> {
   $Res call(
       {@Id() int id,
       int userId,
+      String name,
       String description,
       DateTime createAt,
       DateTime editAt,
@@ -289,6 +291,7 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
   $Res call({
     Object? id = null,
     Object? userId = null,
+    Object? name = null,
     Object? description = null,
     Object? createAt = null,
     Object? editAt = null,
@@ -303,6 +306,10 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as int,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
       description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -334,6 +341,7 @@ abstract class _$$UserProfileImplCopyWith<$Res>
   $Res call(
       {@Id() int id,
       int userId,
+      String name,
       String description,
       DateTime createAt,
       DateTime editAt,
@@ -353,6 +361,7 @@ class __$$UserProfileImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? userId = null,
+    Object? name = null,
     Object? description = null,
     Object? createAt = null,
     Object? editAt = null,
@@ -367,6 +376,10 @@ class __$$UserProfileImplCopyWithImpl<$Res>
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as int,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
       description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -393,6 +406,7 @@ class _$UserProfileImpl implements _UserProfile {
   const _$UserProfileImpl(
       {@Id() required this.id,
       required this.userId,
+      required this.name,
       required this.description,
       required this.createAt,
       required this.editAt,
@@ -407,6 +421,8 @@ class _$UserProfileImpl implements _UserProfile {
   @override
   final int userId;
   @override
+  final String name;
+  @override
   final String description;
   @override
   final DateTime createAt;
@@ -418,7 +434,7 @@ class _$UserProfileImpl implements _UserProfile {
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, userId: $userId, description: $description, createAt: $createAt, editAt: $editAt, avatarId: $avatarId)';
+    return 'UserProfile(id: $id, userId: $userId, name: $name, description: $description, createAt: $createAt, editAt: $editAt, avatarId: $avatarId)';
   }
 
   @override
@@ -428,6 +444,7 @@ class _$UserProfileImpl implements _UserProfile {
             other is _$UserProfileImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.name, name) || other.name == name) &&
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.createAt, createAt) ||
@@ -440,7 +457,7 @@ class _$UserProfileImpl implements _UserProfile {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, id, userId, description, createAt, editAt, avatarId);
+      runtimeType, id, userId, name, description, createAt, editAt, avatarId);
 
   @JsonKey(ignore: true)
   @override
@@ -460,6 +477,7 @@ abstract class _UserProfile implements UserProfile {
   const factory _UserProfile(
       {@Id() required final int id,
       required final int userId,
+      required final String name,
       required final String description,
       required final DateTime createAt,
       required final DateTime editAt,
@@ -473,6 +491,8 @@ abstract class _UserProfile implements UserProfile {
   int get id;
   @override
   int get userId;
+  @override
+  String get name;
   @override
   String get description;
   @override

@@ -1,6 +1,7 @@
 interface UserProfile {
   id: number;
   userId: number;
+  name: string;
   description: string;
   createAt: number;
   editAt: number;
@@ -24,6 +25,7 @@ interface UserProfileGetRequest {
 interface UserProfilePostRequest {
   id: number;
   userId: number;
+  name: string;
   description: string;
   avatarId: string;
 }

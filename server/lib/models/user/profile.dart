@@ -29,6 +29,7 @@ class UserProfilePostRequest with _$UserProfilePostRequest {
   const factory UserProfilePostRequest({
     required int id,
     required int userId,
+    required String name,
     required String description,
     @Default('') String avatarId,
   }) = _UserProfilePostRequest;

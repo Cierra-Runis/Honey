@@ -23,6 +23,7 @@ class UserProfile with _$UserProfile {
   const factory UserProfile({
     @Id() required int id,
     required int userId,
+    required String name,
     required String description,
     required DateTime createAt,
     required DateTime editAt,

@@ -16,7 +16,7 @@ class LoginRequest with _$LoginRequest {
 
   factory LoginRequest.fromJson(Json json) => _$LoginRequestFromJson(json);
 
-  static Future<LoginRequest?> fromRequest(Request request) async {
+  static Future<LoginRequest?> fromRe4quest(Request request) async {
     try {
       final json = await request.json();
       return LoginRequest.fromJson(json as Json);
