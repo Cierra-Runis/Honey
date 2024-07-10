@@ -1,6 +1,8 @@
 import promptAction from '@ohos.promptAction'
 import http from '@ohos.net.http'
 import router from '@ohos.router'
+import { RegisterRequest, RegisterResponse } from '../models/User'
+import { Token } from '../commom/Token'
 
 @Entry
 @Component
@@ -72,7 +74,9 @@ struct RegisterPage {
             return
           }
           // 后端请求
-          this.sendRegisterMsg({ username: this.username, pwd: this.password, confirmpwd: this.confirmpassword })
+          this.sendRegisterMsg({
+            username: this.username, password: this.password
+          })
 
         })
         .margin({ top: 30 })
@@ -92,26 +96,31 @@ struct RegisterPage {
     .justifyContent(FlexAlign.Center)
   }
 
-  async sendRegisterMsg(params: object) {
-    // 1.创建
-    let httprequest = http.createHttp()
+  async sendRegisterMsg(params: RegisterRequest) {
 
-    httprequest.request("https://127.0.0.1:8080",
-      {
-        method: http.RequestMethod.POST,
-        extraData: params
-      },
-      (err, data) => {
-        if (!err) {
-          if (JSON.parse(data.result.toString()).code == 10001)
-            promptAction.showToast({ message: '注册成功' })
-          router.back()
-        }
+    try {
+      // 1.创建
+      let httprequest = http.createHttp()
+
+      let response = await httprequest.request(
+        "http://127.0.0.1:8080/api/register",
+        {
+          method: http.RequestMethod.POST,
+          extraData: params
+        },
+      )
+      // 3.销毁
+      httprequest.destroy()
+
+      let res = JSON.parse(response.result.toString()) as RegisterResponse
+      if (res.token === undefined) {
+        return promptAction.showToast({ message: res.message })
       }
-    )
-    // 3.销毁
-    httprequest.destroy()
 
+      Token.saveToken(res.token)
+    }catch(e){
+      promptAction.showToast({message:e.toString()})
+    }
   }
 
   build() {
