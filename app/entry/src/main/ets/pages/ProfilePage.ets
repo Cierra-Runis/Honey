@@ -8,7 +8,7 @@ interface UserProfile {
   description: string;
   createAt: number;
   editAt: number;
-  avatarId: string;
+  avatarId: Resource;  // 使用 Resource 类型
 }
 
 @Entry
@@ -21,29 +21,40 @@ struct ProfilePage {
     description: "没有的",
     createAt: 20020303,
     editAt: 20030405,
-    avatarId: ''  // 初始化为空
+    avatarId: $r('app.media.icon')  // 默认头像，使用 Resource 类型
   };
 
   onInit() {
-    this.user.avatarId = this.getAvatarUri($r('app.media.icon'));
-  }
-
-  getAvatarUri(resourceId: Resource): string {
-    // 此处假设直接使用资源ID作为URI
-    return `resource://${resourceId}`;
+    const params = router.getParams() as any;  // 使用 any 类型，或更具体的类型
+    if (params && params.avatarUrl) {
+      this.user.avatarId = params.avatarUrl;  // 使用 Resource 类型
+    }
   }
 
   build() {
     Navigation() {
       Column() {
+        Image(this.user.avatarId)  // 显示头像
+          .width(64)
+          .height(64)
+          .borderRadius(32)
+
+        Text(this.user.name)  // 用户名
+          .fontSize(18)
+          .padding(15)
+          .fontColor(Color.Black)
+
         Column({ space: 8 }) {
-          Image(this.user.avatarId) // 显示头像
-            .width(64)
-            .height(64)
-            .borderRadius(32)
-          Text(this.user.name) // 用户名
-            .fontSize(18)
-            .borderStyle(BorderStyle.Solid)
+          Button("上传头像")
+            .fontSize(15)
+            .padding(10)
+            .fontColor(Color.Blue)
+            .onClick(() => {
+              router.push({
+                url: 'pages/UploadAvatarPage',
+                params: { avatarUrl: this.user.avatarId }
+              })
+            })
         }
         .width("80%")
         .height("20%")
@@ -52,17 +63,6 @@ struct ProfilePage {
         .margin(10)
         .borderRadius(10)
         .justifyContent(FlexAlign.Center)
-
-        Button("上传头像")
-          .fontSize(15)
-          .padding(10)
-          .fontColor(Color.Blue)
-          .onClick(() => {
-            router.push({
-              url: 'pages/UploadAvatarPage',
-              params: { avatarUrl: this.user.avatarId }
-            })
-          })
       }
       .width("100%")
       .height("100%")
