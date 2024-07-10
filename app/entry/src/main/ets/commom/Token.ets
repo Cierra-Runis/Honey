@@ -1,6 +1,6 @@
+export class Token {
+  private static TOKEN_KEY = 'token';
 
-class Token {
-  private static TOKEN_KEY = '';
   static init() {
     PersistentStorage.PersistProp(this.TOKEN_KEY, '{}');
   }

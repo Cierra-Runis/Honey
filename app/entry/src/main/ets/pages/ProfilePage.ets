@@ -2,6 +2,7 @@ import router from '@ohos.router';
 import http from '@ohos.net.http';
 import promptAction from '@ohos.promptAction';
 import {UserProfile,UserProfileGetRequest,UserProfileResponse} from '../models/User';
+import { Token } from '../commom/Token';
 
 
 //介绍样式
@@ -35,7 +36,7 @@ struct ProfilePage {
     return `${year}年${month}月${day}日`;
   }
 
-  @State userID: UserProfileGetRequest = null;
+  @State userID: UserProfileGetRequest = {userId:5};
   @State user: UserProfile = {
     id: 1,
     userId: 1,
@@ -51,13 +52,21 @@ struct ProfilePage {
   async fetch(params: UserProfileGetRequest) {
     try {
       let dio = http.createHttp();
-      let response = await dio.request('http://localhost:8080/', {
+      let response = await dio.request('http://localhost:8080/api/user/profile', {
         method: http.RequestMethod.GET,
-        extraData: params
+        extraData: params,
+        header:{'content-type': 'application/json',
+          'Authorization': `Bearer ${Token.getToken()}`
+        }
       });
+
+      console.log(Token.getToken())
+
       dio.destroy();
 
+      console.log(JSON.parse(response.result.toString()))
       let userProfileResponse: UserProfileResponse = JSON.parse(response.result.toString());
+
       if (userProfileResponse.profile === undefined) {
         promptAction.showToast({ message: '获取失败' });
       } else {
@@ -70,15 +79,15 @@ struct ProfilePage {
     }
   }
 
-  //页面自动调用请求函数，拿到信息
-  onInit() {
-    if (this.userID) {
-      this.fetch(this.userID);
-    } else {
-      console.warn('userID is null, cannot fetch user profile.');
-    }
-  }
-
+  // //页面自动调用请求函数，拿到信息
+  // onInit() {
+  //   if (this.userID) {
+  //     this.fetch(this.userID);
+  //   } else {
+  //     console.warn('userID is null, cannot fetch user profile.');
+  //   }
+  // }
+  //
 
   build() {
     Navigation() {
@@ -123,6 +132,9 @@ struct ProfilePage {
             router.pushUrl({ url: 'pages/UploadPage' })
           })
           Text("上传句子").fontSize(14).padding(5).fontColor(Color.Gray)
+          Button("hhh").onClick(()=>{
+            this.fetch({userId: this.userID.userId})
+          })
 
         }
         .width("80%")

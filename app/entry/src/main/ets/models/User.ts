@@ -8,12 +8,12 @@ export interface UserProfile {
   avatarId: string;
 }
 
-interface LoginRequest {
+export  interface LoginRequest {
   username: string;
   password: string;
 }
 
-interface LoginResponse {
+export  interface LoginResponse {
   message: string;
   token: string | undefined;
 }
@@ -35,12 +35,12 @@ export interface UserProfileResponse {
   profile: UserProfile | undefined;
 }
 
-interface RegisterRequest {
+export  interface RegisterRequest {
   username: string;
   password: string;
 }
 
-interface RegisterResponse {
+export  interface RegisterResponse {
   message: string;
   token: string | undefined;
 }
