@@ -4,6 +4,7 @@ import { Hitokoto, HitokotoResponse } from '../models/Hitokoto'
 import promptAction from '@ohos.promptAction';
 import { Constance } from '../commom/Constance';
 import { UserFavorite, UserFavoritePostRequest, UserFavoriteResponse } from '../models/User';
+import { Token } from '../commom/Token';
 
 @Entry
 @Component
@@ -64,14 +65,14 @@ struct HitokotoItem {
   async like(){
     try {
 
-      let req: UserFavoritePostRequest = {userId: 5, hitokotoId: this.content.id}
+      let req: UserFavoritePostRequest = {userId: Number.parseInt(Token.getUserId()), hitokotoId: this.content.id}
 
       let dio = http.createHttp()
       let res = await dio.request(
         `${Constance.baseUrl}/api/user/favorite`,
         {
           header: {
-            'authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImlhdCI6MTcyMDY4NTkwN30.hpMd3c-l_0gDH2yiax00e4Fz-H-8pRKHHv-CdylSb_Y`
+            'authorization': `Bearer ${Token.getToken()}`
           },
           method: http.RequestMethod.POST,
           extraData: req
