@@ -53,6 +53,15 @@ struct Uploadpage {
         //主体
         Scroll() {
           Column({ space: 15 }) {
+            TextInput({
+              placeholder: '请输入创建者ID'
+            }).height(50)
+              .onChange((value)=>{
+                this.creatorId = parseInt(value)
+              })
+              .width('90%')
+              .backgroundColor('#fff')
+              .borderRadius(25)
             TextArea({
               placeholder: '请输入句子内容'
             }).height(150)
@@ -133,3 +142,5 @@ struct Uploadpage {
     .height("100%")
   }
 }
+
+
