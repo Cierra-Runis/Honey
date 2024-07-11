@@ -1,28 +1,41 @@
 import promptAction from '@ohos.promptAction'
 import http from '@ohos.net.http'
 import router from '@ohos.router'
-class User {
-  from: string;
-  from_who: string|null;// 可以是字符串或者null
-  hitokoto: string;
-  type: string;
-  constructor(  from: string, from_who: string|null, hitokoto: string,type:string
-  ) {
+import { HitokotoPostRequest,HitokotoResponse } from '../models/Hitokoto';
 
-    this.from = from;
-    this.from_who = from_who;
-    this.hitokoto = hitokoto;
-    this.type = type;
-  }
-}
 @Entry
 @Component
-struct UploadPage {
-  from: string="";
-  from_who: string|null="";// 可以是字符串或者null
-  hitokoto: string="";
-  type: string='';
+struct Uploadpage {
+  @State source: string = "";
+  @State sourceWho: string | null = ""; // 可以是字符串或者null
+  @State hitokoto: string = "";
+  @State type: string = "";
+  @State creatorId: number = 1;
   @State menuSelected: Boolean = true
+
+
+  async  fetch(params) {
+    try {
+      let dio = http.createHttp();
+      let response = await dio.request('http://localhost:8080/api/hitokoto', {
+        method: http.RequestMethod.POST,
+        extraData: params
+      })
+      dio.destroy()
+
+      let hitokotoResponse = JSON.parse(response.result.toString()) as  HitokotoResponse
+
+      if (hitokotoResponse.hitokoto === undefined) {
+        return promptAction.showToast({ message: '获取失败' });
+      }
+
+    } catch (e) {
+      console.log(e)
+      promptAction.showToast({ message: `错误 ${e}` })
+    }
+
+  }
+
   build() {
 
     Stack({ alignContent: Alignment.Bottom }) {
@@ -40,6 +53,15 @@ struct UploadPage {
         //主体
         Scroll() {
           Column({ space: 15 }) {
+            TextInput({
+              placeholder: '请输入创建者ID'
+            }).height(50)
+              .onChange((value)=>{
+                this.creatorId = parseInt(value)
+              })
+              .width('90%')
+              .backgroundColor('#fff')
+              .borderRadius(25)
             TextArea({
               placeholder: '请输入句子内容'
             }).height(150)
@@ -52,7 +74,7 @@ struct UploadPage {
             TextArea({
               placeholder: '请输入句子来源'
             }).onChange((value)=>{
-              this.from = value
+              this.source= value
             }).height(150)
               .width('90%')
               .backgroundColor('#fff')
@@ -60,7 +82,7 @@ struct UploadPage {
             TextArea({
               placeholder: '请输入句子作者'
             }).onChange((value)=>{
-              this.from_who = value
+              this.sourceWho = value
             }).height(150)
               .width('90%')
               .backgroundColor('#fff')
@@ -68,7 +90,7 @@ struct UploadPage {
             TextArea({
               placeholder: '请输入句子类型'
             }).onChange((value)=>{
-              this.from_who = value
+              this.type = value
             }).height(150)
               .width('90%')
               .backgroundColor('#fff')
@@ -80,7 +102,7 @@ struct UploadPage {
                   promptAction.showToast({message:'未输入句子'})
                   return
                 }
-                if(!this.from){
+                if(!this.source){
                   promptAction.showToast({message:'未输入句子来源'})
                   return
                 }
@@ -88,7 +110,14 @@ struct UploadPage {
                   promptAction.showToast({message:'未输入句类型'})
                   return
                 }
-                this.sendUploadPage({hitokoto:this.hitokoto,from:this.from,from_who:this.from_who,type:this.type})
+                let request :HitokotoPostRequest = {
+                  hitokoto: this.hitokoto,
+                  source: this.source,
+                  sourceWho: this.sourceWho,
+                  type: this.type,
+                  creatorId: this.creatorId
+                }
+                this.fetch(request)
               })
             Row({ space: 100 }) {
               Text('返回').onClick(() => {
@@ -112,27 +141,6 @@ struct UploadPage {
     .width('100%')
     .height("100%")
   }
-
-  async sendUploadPage(params:object){
-    // 1.创建
-    let httprequest = http.createHttp()
-
-    await httprequest.request("https://127.0.0.1:8080",
-      {
-        method:http.RequestMethod.POST,
-        extraData:params
-      },
-      (err,data)=>{
-        if(!err)
-        {
-          if(JSON.parse(data.result.toString()).code == 10001)
-            promptAction.showToast({message:'提交成功'})
-          router.back()
-        }
-      }
-    )
-    // 3.销毁
-    httprequest.destroy()
-
-  }
 }
+
+
