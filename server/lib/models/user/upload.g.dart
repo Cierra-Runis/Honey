@@ -9,7 +9,7 @@ part of 'upload.dart';
 _$UserUploadRequestImpl _$$UserUploadRequestImplFromJson(
         Map<String, dynamic> json) =>
     _$UserUploadRequestImpl(
-      userId: (json['userId'] as num).toInt(),
+      userId: json['userId'] as String,
     );
 
 Map<String, dynamic> _$$UserUploadRequestImplToJson(

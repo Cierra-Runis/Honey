@@ -1,15 +1,19 @@
 import 'package:server/index.dart';
 
-Future<Response> onRequest(RequestContext context, String uuid) async {
+Future<Response> onRequest(RequestContext context, String id) async {
   return switch (context.request.method) {
-    HttpMethod.get => await _get(context, uuid),
+    HttpMethod.get => await _get(context, id),
     _ => Response.json(statusCode: HttpStatus.methodNotAllowed)
   };
 }
 
-Future<Response> _get(RequestContext context, String uuid) async {
+Future<Response> _get(RequestContext context, String id) async {
   final database = context.read<IsarDatabase>();
-  final hitokoto = database.findUniqueHitokotoByUUID(uuid);
+  final intId = int.tryParse(id);
+
+  if (intId == null) return Response.json(statusCode: HttpStatus.badRequest);
+
+  final hitokoto = database.findUniqueHitokotoById(intId);
 
   if (hitokoto == null) {
     return Response.json(

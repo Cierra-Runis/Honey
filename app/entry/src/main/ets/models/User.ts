@@ -1,3 +1,4 @@
+import { Hitokoto } from './Hitokoto';
 export interface UserProfile {
   id: number;
   userId: number;
@@ -8,12 +9,18 @@ export interface UserProfile {
   avatarId: string;
 }
 
-export  interface LoginRequest {
+export interface UserFavorite {
+  id: number;
+  userId: number;
+  hitokotoId: number;
+}
+
+export interface LoginRequest {
   username: string;
   password: string;
 }
 
-export  interface LoginResponse {
+export interface LoginResponse {
   message: string;
   token: string | undefined;
 }
@@ -30,17 +37,27 @@ export interface UserProfilePostRequest {
   avatarId: string;
 }
 
+export interface UserFavoriteResponse {
+  message: string;
+  favorites: UserFavorite[];
+}
+
+export interface UserUploadResponse {
+  message: string;
+  hitokotos: Hitokoto[];
+}
+
 export interface UserProfileResponse {
   message: string;
   profile: UserProfile | undefined;
 }
 
-export  interface RegisterRequest {
+export interface RegisterRequest {
   username: string;
   password: string;
 }
 
-export  interface RegisterResponse {
+export interface RegisterResponse {
   message: string;
   token: string | undefined;
 }

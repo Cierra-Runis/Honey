@@ -9,7 +9,7 @@ part of 'favorite.dart';
 _$UserFavoriteRequestImpl _$$UserFavoriteRequestImplFromJson(
         Map<String, dynamic> json) =>
     _$UserFavoriteRequestImpl(
-      userId: (json['userId'] as num).toInt(),
+      userId: json['userId'] as String,
     );
 
 Map<String, dynamic> _$$UserFavoriteRequestImplToJson(

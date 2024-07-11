@@ -69,7 +69,7 @@ class IsarDatabase {
 
     final newUserProfile = UserProfile(
       id: _isar.userProfiles.autoIncrement(),
-      name: 'HoneyEr $userId',
+      name: 'Honey $userId',
       userId: userId,
       description: '',
       createAt: DateTime.now(),
@@ -117,8 +117,8 @@ class IsarDatabase {
         .findFirst();
   }
 
-  Hitokoto? findUniqueHitokotoByUUID(String uuid) {
-    return _isar.hitokotos.where().uuidEqualTo(uuid).findFirst();
+  Hitokoto? findUniqueHitokotoById(int id) {
+    return _isar.hitokotos.where().idEqualTo(id).findFirst();
   }
 
   Hitokoto? createHitokotoByHitokotoPostRequest(HitokotoPostRequest request) {

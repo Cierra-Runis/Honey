@@ -6,7 +6,7 @@ part 'favorite.g.dart';
 @freezed
 class UserFavoriteGetRequest with _$UserFavoriteGetRequest {
   const factory UserFavoriteGetRequest({
-    required int userId,
+    required String userId,
   }) = _UserFavoriteRequest;
 
   factory UserFavoriteGetRequest.fromJson(Json json) =>
@@ -14,8 +14,7 @@ class UserFavoriteGetRequest with _$UserFavoriteGetRequest {
 
   static Future<UserFavoriteGetRequest?> fromRequest(Request request) async {
     try {
-      final json = await request.json();
-      return UserFavoriteGetRequest.fromJson(json as Json);
+      return UserFavoriteGetRequest.fromJson(request.uri.queryParameters);
     } catch (e) {
       return null;
     }

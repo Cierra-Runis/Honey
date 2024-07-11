@@ -3,36 +3,91 @@ import ArrayList from '@ohos.util.ArrayList'
 import fetch from '@system.fetch'
 import http from '@ohos.net.http';
 import promptAction from '@ohos.promptAction';
-import { Hitokoto, HitokotoListResponse } from '../models/Hitokoto'
+import { Hitokoto, HitokotoResponse } from '../models/Hitokoto'
 import { Constance } from '../commom/Constance';
+import { Token } from '../commom/Token';
+import { UserUploadResponse } from '../models/User';
 
+export class BasicDataSource implements IDataSource {
+  private listeners: DataChangeListener[] = [];
+  private originDataArray: Hitokoto[] = []
 
-async function fetchHitokotoData(userId: number): Promise<Array<Hitokoto>> {
-  try {
-    let dio = http.createHttp();
-    let requestData = { userId: userId };
-    let response = await dio.request(`${Constance.baseUrl}/api/user/upload` ,{extraData:requestData})
-    dio.destroy()
+  public totalCount(): number {
+    return 0;
+  }
 
-    let hitokotosResponse  = JSON.parse(response.result.toString()) as HitokotoListResponse
+  public getData(index: number): Hitokoto {
+    return this.originDataArray[index];
+  }
 
-    // if (hitokotosResponse.hitokotoList === undefined) {
-    //   return promptAction.showToast({message:'获取失败'});
-    // }
-    let hitokotoUploadList: Array<Hitokoto> = hitokotosResponse.hitokotoList;
-    return hitokotoUploadList
-  } catch (e) {
-    console.log(e)
-    promptAction.showToast({message:`错误 ${e}`})
+  // 该方法为框架侧调用，为LazyForEach组件向其数据源处添加listener监听
+  registerDataChangeListener(listener: DataChangeListener): void {
+    if (this.listeners.indexOf(listener) < 0) {
+      console.info('add listener');
+      this.listeners.push(listener);
+    }
+  }
+
+  // 该方法为框架侧调用，为对应的LazyForEach组件在数据源处去除listener监听
+  unregisterDataChangeListener(listener: DataChangeListener): void {
+    const pos = this.listeners.indexOf(listener);
+    if (pos >= 0) {
+      console.info('remove listener');
+      this.listeners.splice(pos, 1);
+    }
+  }
+
+  // 通知LazyForEach组件需要重载所有子组件
+  notifyDataReload(): void {
+    this.listeners.forEach(listener => {
+      listener.onDataReloaded();
+    })
+  }
+
+  // 通知LazyForEach组件需要在index对应索引处添加子组件
+  notifyDataAdd(index: number): void {
+    this.listeners.forEach(listener => {
+      listener.onDataAdd(index);
+    })
+  }
+
+  // 通知LazyForEach组件在index对应索引处数据有变化，需要重建该子组件
+  notifyDataChange(index: number): void {
+    this.listeners.forEach(listener => {
+      listener.onDataChange(index);
+    })
+  }
+
+  // 通知LazyForEach组件需要在index对应索引处删除该子组件
+  notifyDataDelete(index: number): void {
+    this.listeners.forEach(listener => {
+      listener.onDataDelete(index);
+    })
+  }
+}
+
+export class DataSource extends BasicDataSource{
+  list: Hitokoto[] = []
+
+  totalCount(){
+    return this.list.length;
+  }
+
+  getData(index:number):Hitokoto {
+    return this.list[index]
+  }
+
+  freshData(data: Hitokoto[]){
+    this.list = data
+    this.notifyDataReload()
   }
 }
 
 @Entry
 @Component
 struct UserUploadPage {
-  @State hitokotoList: Array<Hitokoto>= [];
 
-  userId: number = 5; // 假设用户ID为1
+  private data: DataSource = new DataSource()
 
   aboutToAppear() {
     this.fetch()
@@ -40,8 +95,16 @@ struct UserUploadPage {
 
   async fetch() {
     try {
-      let newItems = await fetchHitokotoData(this.userId);
-      this.hitokotoList = [...this.hitokotoList, ...newItems];
+      let dio = http.createHttp();
+      let response = await dio.request(
+        `${Constance.baseUrl}/api/user/upload?userId=${Token.getUserId()}`,
+        { header:{'authorization': `Bearer ${Token.getToken()}`} }
+      )
+      dio.destroy()
+
+      let res  = JSON.parse(response.result.toString()) as UserUploadResponse
+
+      this.data.freshData(res.hitokotos)
     } catch (e) {
       console.log(e);
       promptAction.showToast({ message: `错误 ${e}` });
@@ -60,21 +123,27 @@ struct UserUploadPage {
     }.justifyContent(FlexAlign.End)
   }
 
+  @Builder
+  itemLayout(_: Object, index: number): void {
+    Text("测试数据" + index)
+      .width("95%")
+      .height(50)
+      .margin(10)
+      .textAlign(TextAlign.Center)
+      .border({ width: 1, color: Color.Pink })
+  }
+
 
   build() {
     Navigation() {
       List() {
-        ForEach(this.hitokotoList, (hitokoto: Hitokoto) => {
-          ListItem() {
-            HitokotoItem({ content: hitokoto }).margin({ top: 20 })
+        LazyForEach(this.data, item => {
+          ListItem(){
+            HitokotoItem({content:item})
           }
-        },)
+        })
       }
-      .padding(20)
-      .scrollBar(BarState.Off)
-      .backgroundColor(0xF1F3F5)
-      .scrollBar(BarState.On)
-    }.title('Honey')
+    }.title('我的投稿')
   }
 }
 
@@ -84,7 +153,6 @@ struct HitokotoItem {
   content: Hitokoto;
 
   build() {
-
     Column({ space: 8 }) {
       Column() {
         Text('「').width('100%')
@@ -93,14 +161,6 @@ struct HitokotoItem {
           Text('」')
         }.width('100%').justifyContent(FlexAlign.End)
       }
-
-      Row({ space: 8 }) {
-        Button() {
-          Image($r('app.media.ic_public_favor'))
-            .width(18).margin(4)
-        }.backgroundColor(Color.Transparent)
-      }.width('100%').justifyContent(FlexAlign.End)
-
     }.backgroundColor('#F8F8F8').borderRadius(12).padding(8).margin(8)
   }
 }

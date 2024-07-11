@@ -21,7 +21,7 @@ UserProfileGetRequest _$UserProfileGetRequestFromJson(
 
 /// @nodoc
 mixin _$UserProfileGetRequest {
-  int get userId => throw _privateConstructorUsedError;
+  String get userId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +35,7 @@ abstract class $UserProfileGetRequestCopyWith<$Res> {
           $Res Function(UserProfileGetRequest) then) =
       _$UserProfileGetRequestCopyWithImpl<$Res, UserProfileGetRequest>;
   @useResult
-  $Res call({int userId});
+  $Res call({String userId});
 }
 
 /// @nodoc
@@ -58,7 +58,7 @@ class _$UserProfileGetRequestCopyWithImpl<$Res,
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
     ) as $Val);
   }
 }
@@ -72,7 +72,7 @@ abstract class _$$UserProfileGetRequestImplCopyWith<$Res>
       __$$UserProfileGetRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int userId});
+  $Res call({String userId});
 }
 
 /// @nodoc
@@ -93,7 +93,7 @@ class __$$UserProfileGetRequestImplCopyWithImpl<$Res>
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
     ));
   }
 }
@@ -107,7 +107,7 @@ class _$UserProfileGetRequestImpl extends _UserProfileGetRequest {
       _$$UserProfileGetRequestImplFromJson(json);
 
   @override
-  final int userId;
+  final String userId;
 
   @override
   String toString() {
@@ -142,7 +142,7 @@ class _$UserProfileGetRequestImpl extends _UserProfileGetRequest {
 }
 
 abstract class _UserProfileGetRequest extends UserProfileGetRequest {
-  const factory _UserProfileGetRequest({required final int userId}) =
+  const factory _UserProfileGetRequest({required final String userId}) =
       _$UserProfileGetRequestImpl;
   const _UserProfileGetRequest._() : super._();
 
@@ -150,7 +150,7 @@ abstract class _UserProfileGetRequest extends UserProfileGetRequest {
       _$UserProfileGetRequestImpl.fromJson;
 
   @override
-  int get userId;
+  String get userId;
   @override
   @JsonKey(ignore: true)
   _$$UserProfileGetRequestImplCopyWith<_$UserProfileGetRequestImpl>

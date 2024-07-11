@@ -1,3 +1,3 @@
 export class Constance {
-  static baseUrl = 'http://192.168.93.167:8080';
+  static baseUrl = 'http://192.168.1.115:8080';
 }

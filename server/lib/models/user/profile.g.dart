@@ -9,7 +9,7 @@ part of 'profile.dart';
 _$UserProfileGetRequestImpl _$$UserProfileGetRequestImplFromJson(
         Map<String, dynamic> json) =>
     _$UserProfileGetRequestImpl(
-      userId: (json['userId'] as num).toInt(),
+      userId: json['userId'] as String,
     );
 
 Map<String, dynamic> _$$UserProfileGetRequestImplToJson(

@@ -6,7 +6,7 @@ part 'upload.g.dart';
 @freezed
 class UserUploadRequest with _$UserUploadRequest {
   const factory UserUploadRequest({
-    required int userId,
+    required String userId,
   }) = _UserUploadRequest;
 
   factory UserUploadRequest.fromJson(Json json) =>
@@ -14,8 +14,7 @@ class UserUploadRequest with _$UserUploadRequest {
 
   static Future<UserUploadRequest?> fromRequest(Request request) async {
     try {
-      final json = await request.json();
-      return UserUploadRequest.fromJson(json as Json);
+      return UserUploadRequest.fromJson(request.uri.queryParameters);
     } catch (e) {
       return null;
     }

@@ -9,7 +9,7 @@ Future<Response> onRequest(RequestContext context) async {
 
 Future<Response> _get(RequestContext context) async {
   final request = await UserUploadRequest.fromRequest(context.request);
-  if (request == null) {
+  if (request == null || int.tryParse(request.userId) == null) {
     return Response.json(
       statusCode: HttpStatus.badRequest,
       body: const UserProfileResponse(message: '参数错误'),
@@ -20,7 +20,9 @@ Future<Response> _get(RequestContext context) async {
   return Response.json(
     body: UserUploadResponse(
       message: '获取成功',
-      hitokotos: database.findHitokotosCreatedByUserId(request.userId),
+      hitokotos: database.findHitokotosCreatedByUserId(
+        int.parse(request.userId),
+      ),
     ),
   );
 }

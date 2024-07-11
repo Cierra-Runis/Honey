@@ -21,7 +21,7 @@ UserFavoriteGetRequest _$UserFavoriteGetRequestFromJson(
 
 /// @nodoc
 mixin _$UserFavoriteGetRequest {
-  int get userId => throw _privateConstructorUsedError;
+  String get userId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +35,7 @@ abstract class $UserFavoriteGetRequestCopyWith<$Res> {
           $Res Function(UserFavoriteGetRequest) then) =
       _$UserFavoriteGetRequestCopyWithImpl<$Res, UserFavoriteGetRequest>;
   @useResult
-  $Res call({int userId});
+  $Res call({String userId});
 }
 
 /// @nodoc
@@ -58,7 +58,7 @@ class _$UserFavoriteGetRequestCopyWithImpl<$Res,
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
     ) as $Val);
   }
 }
@@ -71,7 +71,7 @@ abstract class _$$UserFavoriteRequestImplCopyWith<$Res>
       __$$UserFavoriteRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int userId});
+  $Res call({String userId});
 }
 
 /// @nodoc
@@ -92,7 +92,7 @@ class __$$UserFavoriteRequestImplCopyWithImpl<$Res>
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
     ));
   }
 }
@@ -106,7 +106,7 @@ class _$UserFavoriteRequestImpl implements _UserFavoriteRequest {
       _$$UserFavoriteRequestImplFromJson(json);
 
   @override
-  final int userId;
+  final String userId;
 
   @override
   String toString() {
@@ -141,14 +141,14 @@ class _$UserFavoriteRequestImpl implements _UserFavoriteRequest {
 }
 
 abstract class _UserFavoriteRequest implements UserFavoriteGetRequest {
-  const factory _UserFavoriteRequest({required final int userId}) =
+  const factory _UserFavoriteRequest({required final String userId}) =
       _$UserFavoriteRequestImpl;
 
   factory _UserFavoriteRequest.fromJson(Map<String, dynamic> json) =
       _$UserFavoriteRequestImpl.fromJson;
 
   @override
-  int get userId;
+  String get userId;
   @override
   @JsonKey(ignore: true)
   _$$UserFavoriteRequestImplCopyWith<_$UserFavoriteRequestImpl> get copyWith =>

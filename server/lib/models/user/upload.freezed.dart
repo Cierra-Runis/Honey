@@ -20,7 +20,7 @@ UserUploadRequest _$UserUploadRequestFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$UserUploadRequest {
-  int get userId => throw _privateConstructorUsedError;
+  String get userId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -34,7 +34,7 @@ abstract class $UserUploadRequestCopyWith<$Res> {
           UserUploadRequest value, $Res Function(UserUploadRequest) then) =
       _$UserUploadRequestCopyWithImpl<$Res, UserUploadRequest>;
   @useResult
-  $Res call({int userId});
+  $Res call({String userId});
 }
 
 /// @nodoc
@@ -56,7 +56,7 @@ class _$UserUploadRequestCopyWithImpl<$Res, $Val extends UserUploadRequest>
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
     ) as $Val);
   }
 }
@@ -69,7 +69,7 @@ abstract class _$$UserUploadRequestImplCopyWith<$Res>
       __$$UserUploadRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int userId});
+  $Res call({String userId});
 }
 
 /// @nodoc
@@ -89,7 +89,7 @@ class __$$UserUploadRequestImplCopyWithImpl<$Res>
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
     ));
   }
 }
@@ -103,7 +103,7 @@ class _$UserUploadRequestImpl implements _UserUploadRequest {
       _$$UserUploadRequestImplFromJson(json);
 
   @override
-  final int userId;
+  final String userId;
 
   @override
   String toString() {
@@ -138,14 +138,14 @@ class _$UserUploadRequestImpl implements _UserUploadRequest {
 }
 
 abstract class _UserUploadRequest implements UserUploadRequest {
-  const factory _UserUploadRequest({required final int userId}) =
+  const factory _UserUploadRequest({required final String userId}) =
       _$UserUploadRequestImpl;
 
   factory _UserUploadRequest.fromJson(Map<String, dynamic> json) =
       _$UserUploadRequestImpl.fromJson;
 
   @override
-  int get userId;
+  String get userId;
   @override
   @JsonKey(ignore: true)
   _$$UserUploadRequestImplCopyWith<_$UserUploadRequestImpl> get copyWith =>

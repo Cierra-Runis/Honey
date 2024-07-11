@@ -11,11 +11,6 @@ export interface HitokotoResponse {
   hitokoto: Hitokoto | undefined;
 }
 
-export interface HitokotoListResponse {
-  message: string;
-  hitokotoList: Array<Hitokoto>
-}
-
 export interface Hitokoto {
   id: number;
   uuid: string;

@@ -9,11 +9,12 @@ Future<Response> onRequest(RequestContext context) async {
 }
 
 Future<Response> _get(RequestContext context) async {
-  final request = await UserProfileGetRequest.fromRequest(context.request);
-  if (request == null) {
+  final request = await UserFavoriteGetRequest.fromRequest(context.request);
+
+  if (request == null || int.tryParse(request.userId) == null) {
     return Response.json(
       statusCode: HttpStatus.badRequest,
-      body: const UserProfileResponse(message: '参数错误'),
+      body: const UserFavoriteResponse(message: '参数错误', favorites: []),
     );
   }
 
@@ -21,7 +22,7 @@ Future<Response> _get(RequestContext context) async {
   return Response.json(
     body: UserFavoriteResponse(
       message: '获取成功',
-      favorites: database.findUserFavoritesByUserId(request.userId),
+      favorites: database.findUserFavoritesByUserId(int.parse(request.userId)),
     ),
   );
 }
@@ -31,7 +32,7 @@ Future<Response> _post(RequestContext context) async {
   if (request == null) {
     return Response.json(
       statusCode: HttpStatus.badRequest,
-      body: const UserProfileResponse(message: '参数错误'),
+      body: const UserFavoriteResponse(message: '参数错误', favorites: []),
     );
   }
 

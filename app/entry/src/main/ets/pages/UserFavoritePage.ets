@@ -3,36 +3,17 @@ import ArrayList from '@ohos.util.ArrayList'
 import fetch from '@system.fetch'
 import http from '@ohos.net.http';
 import promptAction from '@ohos.promptAction';
-import { Hitokoto, HitokotoListResponse } from '../models/Hitokoto'
+import { Hitokoto, HitokotoResponse } from '../models/Hitokoto'
 import { Constance } from '../commom/Constance';
+import { Token } from '../commom/Token';
+import { UserFavorite, UserFavoriteResponse } from '../models/User';
 
 
-async function fetchHitokotoData(userId: number): Promise<Array<Hitokoto>> {
-  try {
-    let dio = http.createHttp();
-    let requestData = { userId: userId };
-    let response = await dio.request(`${Constance.baseUrl}/api/user/upload`,{extraData:requestData})
-    dio.destroy()
-
-    let hitokotosResponse  = JSON.parse(response.result.toString()) as HitokotoListResponse
-
-    // if (hitokotosResponse.hitokotoList === undefined) {
-    //   return promptAction.showToast({message:'获取失败'});
-    // }
-    let hitokotoUploadList: Array<Hitokoto> = hitokotosResponse.hitokotoList;
-    return hitokotoUploadList
-  } catch (e) {
-    console.log(e)
-    promptAction.showToast({message:`错误 ${e}`})
-  }
-}
 
 @Entry
 @Component
 struct UserUploadPage {
-  @State hitokotoList: Array<Hitokoto>= [];
-
-  userId: number = 5; // 假设用户ID为1
+  @State favorites: UserFavorite[] = [];
 
   aboutToAppear() {
     this.fetch()
@@ -40,13 +21,24 @@ struct UserUploadPage {
 
   async fetch() {
     try {
-      let newItems = await fetchHitokotoData(this.userId);
-      this.hitokotoList = [...this.hitokotoList, ...newItems];
+      let dio = http.createHttp();
+      let response = await dio.request(
+        `${Constance.baseUrl}/api/user/favorite?userId=${Token.getUserId()}`,
+        { header:{'authorization': `Bearer ${Token.getToken()}`} }
+      )
+      dio.destroy()
+
+      let res  = JSON.parse(response.result.toString()) as UserFavoriteResponse
+
+      this.favorites = res.favorites;
     } catch (e) {
       console.log(e);
       promptAction.showToast({ message: `错误 ${e}` });
     }
   }
+
+
+
 
   @Builder AppbarAction() {
     Row({ space: 8 }) {
@@ -64,42 +56,63 @@ struct UserUploadPage {
   build() {
     Navigation() {
       List() {
-        ForEach(this.hitokotoList, (hitokoto: Hitokoto) => {
+        ForEach(this.favorites, (e: UserFavorite) => {
           ListItem() {
-            HitokotoItem({ content: hitokoto }).margin({ top: 20 })
+            FavoriteItem({ content: e }).margin({ top: 20 })
           }
         },)
       }
-      .padding(20)
-      .scrollBar(BarState.Off)
-      .backgroundColor(0xF1F3F5)
-      .scrollBar(BarState.On)
-    }.title('Honey')
+    }.title('我的收藏')
   }
 }
 
 
 @Component
-struct HitokotoItem {
-  content: Hitokoto;
+struct FavoriteItem {
+  private content: UserFavorite;
 
-  build() {
+  @State private hitokoto: Hitokoto | undefined = undefined
 
-    Column({ space: 8 }) {
-      Column() {
-        Text('「').width('100%')
-        Text(this.content.hitokoto)
-        Row() {
-          Text('」')
-        }.width('100%').justifyContent(FlexAlign.End)
+  aboutToAppear(){
+    this.fetch()
+  }
+
+  async fetch(){
+    try {
+      let dio = http.createHttp();
+      let response = await dio.request(`${Constance.baseUrl}/api/hitokoto/${this.content.hitokotoId}`)
+      dio.destroy()
+
+      let hitokoto = JSON.parse(response.result.toString()) as HitokotoResponse
+
+      if (hitokoto.hitokoto === undefined) {
+        return promptAction.showToast({message:'获取失败'});
       }
 
-      Row({ space: 8 }) {
-        Button() {
-          Image($r('app.media.ic_public_favor'))
-            .width(18).margin(4)
-        }.backgroundColor(Color.Transparent)
-      }.width('100%').justifyContent(FlexAlign.End)
+      this.hitokoto = hitokoto.hitokoto;
+    } catch (e) {
+      console.log(e)
+      promptAction.showToast({message:`错误 ${e}`})
+    }
+  }
+
+  build() {
+    Column({ space: 8 }) {
+
+      if(this.hitokoto) {
+        Column({space: 8}) {
+          Text('「').width('100%')
+          Text(this.hitokoto.hitokoto).padding({left:12,right:12})
+          Row() {
+            Text(`——${this.hitokoto.source}`)
+          }.width('100%').justifyContent(FlexAlign.End).padding({right: 12})
+          Row() {
+            Text('」')
+          }.width('100%').justifyContent(FlexAlign.End)
+        }
+      }else {
+        LoadingProgress()
+      }
 
     }.backgroundColor('#F8F8F8').borderRadius(12).padding(8).margin(8)
   }

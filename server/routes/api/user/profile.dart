@@ -10,6 +10,7 @@ Future<Response> onRequest(RequestContext context) async {
 
 Future<Response> _get(RequestContext context) async {
   final request = await UserProfileGetRequest.fromRequest(context.request);
+
   if (request == null) {
     return Response.json(
       statusCode: HttpStatus.badRequest,
@@ -17,8 +18,16 @@ Future<Response> _get(RequestContext context) async {
     );
   }
 
+  final userId = int.tryParse(request.userId);
+  if (userId == null) {
+    return Response.json(
+      statusCode: HttpStatus.badRequest,
+      body: const UserProfileResponse(message: '参数错误'),
+    );
+  }
+
   final database = context.read<IsarDatabase>();
-  final userProfile = database.findUniqueUserProfileByUserId(request.userId);
+  final userProfile = database.findUniqueUserProfileByUserId(userId);
 
   if (userProfile == null) {
     return Response.json(

@@ -119,16 +119,6 @@ struct UploadPage {
                 }
                 this.fetch(request)
               })
-            Row({ space: 100 }) {
-              Text('返回').onClick(() => {
-                router.pushUrl({url:'pages/ProfilePage'})
-              })
-              Text('保存').onClick(() => {
-                AlertDialog.show({
-                  message: '保存成功'
-                })
-              })
-            }
           }
           .width('100%')
           .padding({ top: 220 , bottom:60 })

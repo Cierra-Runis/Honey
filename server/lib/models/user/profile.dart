@@ -6,7 +6,7 @@ part 'profile.g.dart';
 @freezed
 class UserProfileGetRequest with _$UserProfileGetRequest {
   const factory UserProfileGetRequest({
-    required int userId,
+    required String userId,
   }) = _UserProfileGetRequest;
 
   const UserProfileGetRequest._();
@@ -16,8 +16,7 @@ class UserProfileGetRequest with _$UserProfileGetRequest {
 
   static Future<UserProfileGetRequest?> fromRequest(Request request) async {
     try {
-      final json = await request.json();
-      return UserProfileGetRequest.fromJson(json as Json);
+      return UserProfileGetRequest.fromJson(request.uri.queryParameters);
     } catch (e) {
       return null;
     }
