@@ -42,6 +42,19 @@ Future<Response> _post(RequestContext context) async {
   }
 
   final database = context.read<IsarDatabase>();
+
+  final allHasFavorite = database.findUserFavoritesByUserId(request.userId);
+  final isPostHasFavorite = allHasFavorite
+      .where((element) => element.hitokotoId == request.hitokotoId)
+      .isNotEmpty;
+
+  if (isPostHasFavorite) {
+    return Response.json(
+      statusCode: HttpStatus.conflict,
+      body: const UserFavoriteResponse(message: '不能重复收藏', favorites: []),
+    );
+  }
+
   final favourite =
       database.createUserFavoriteByUserFavoritePostRequest(request);
 

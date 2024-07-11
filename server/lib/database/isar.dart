@@ -162,11 +162,6 @@ class IsarDatabase {
       hitokotoId: request.hitokotoId,
     );
 
-    final hasFavorite = findUserFavoritesByUserId(request.userId)
-        .where((element) => element.hitokotoId == request.hitokotoId);
-
-    if (hasFavorite.isNotEmpty) return null;
-
     try {
       _isar.write((isar) => isar.userFavorites.put(favorite));
       return favorite;

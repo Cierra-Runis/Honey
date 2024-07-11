@@ -37,6 +37,11 @@ export interface UserProfilePostRequest {
   avatarId: string;
 }
 
+export interface UserFavoritePostRequest {
+   userId: number,
+   hitokotoId: number,
+}
+
 export interface UserFavoriteResponse {
   message: string;
   favorites: UserFavorite[];
