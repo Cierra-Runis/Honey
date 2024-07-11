@@ -1,4 +1,5 @@
 import router from '@ohos.router';
+import prompt from '@ohos.prompt';
 
 class User {
   id: number;
@@ -80,12 +81,28 @@ function rowFancy() {
 @Component
 struct ProfilePage {
   @State img: Resource = $r('app.media.icon');  // 默认头像，使用 Resource 类型
+  @State name: string = user.name;
+  @State email: string = user.email;
+  @State startday: string = user.startday;
+  @State upday: string = user.upday;
 
   onInit() {
     const params = router.getParams() as any;  // 使用 any 类型，或更具体的类型
     if (params && params.avatar) {
       this.img = params.avatar;  // 更新头像
     }
+  }
+
+  saveProfile() {
+    user.name = this.name;
+    user.email = this.email;
+    user.startday = this.startday;
+    user.upday = this.upday;
+
+    prompt.showToast({
+      message: "个人信息已更新",
+      duration: 3000
+    });
   }
 
   build() {
@@ -97,7 +114,7 @@ struct ProfilePage {
             .width(64)
             .height(64)
             .borderRadius(32);
-          Text(user.name).fontSize(18).borderStyle(BorderStyle.Solid);
+          Text(this.name).fontSize(18).borderStyle(BorderStyle.Solid);
         }
         .width("80%")
         .height("20%")
@@ -110,18 +127,48 @@ struct ProfilePage {
         // 个人信息
         Column() {
           Row() {
+            Text("用户名").fontSize(15).globalFancy();
+            TextInput()
+
+
+              .onChange((value: string) => {
+                this.name = value;
+              })
+              .width(200)
+              .padding(10);
+          }.rowFancy();
+
+          Row() {
             Text("电子邮箱").fontSize(15).globalFancy();
-            Text(user.email).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1);
+            TextInput()
+
+              .onChange((value: string) => {
+                this.email = value;
+              })
+              .width(200)
+              .padding(10);
           }.rowFancy();
 
           Row() {
             Text("创建时间").fontSize(15).globalFancy();
-            Text(user.startday).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1);
+            TextInput()
+
+              .onChange((value: string) => {
+                this.startday = value;
+              })
+              .width(200)
+              .padding(10);
           }.rowFancy();
 
           Row() {
             Text("更新时间").fontSize(15).globalFancy();
-            Text(user.upday).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1);
+            TextInput()
+
+              .onChange((value: string) => {
+                this.upday = value;
+              })
+              .width(200)
+              .padding(10);
           }.rowFancy();
 
           Row() {
@@ -129,19 +176,17 @@ struct ProfilePage {
             Text(ema.toString()).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1);
           }.rowFancy();
 
-          // 上传头像链接
-          Text("上传头像").fontSize(14).padding(5).fontColor(Color.Blue).onClick(() => {
-            router.push({
-              url: 'pages/UploadAvatarPage',
-              params: { avatar: this.img }
+          Button("保存").fontSize(18).padding(1).backgroundColor("#007BFF").fontColor("#FFFFFF").onClick(() => {
+            this.saveProfile();
+          });
+          Row() {
+            Text("上传句子").fontSize(18).padding(1).fontColor(Color.Gray);
+            Image($r("app.media.ic_public_add_norm")).width(30).fillColor("#ff6d51dd").padding(1)
+              .margin({ top: 20 }).onClick(() => {
+              router.pushUrl({ url: 'pages/UploadPage' });
             });
-          });
+          };
 
-          Image($r("app.media.ic_public_add_norm")).width(40).fillColor("#ff6d51dd")
-            .margin({ top: 20 }).onClick(() => {
-            router.pushUrl({ url: 'pages/UploadPage' });
-          });
-          Text("上传句子").fontSize(14).padding(5).fontColor(Color.Gray);
         }
         .width("80%")
         .height("60%")
