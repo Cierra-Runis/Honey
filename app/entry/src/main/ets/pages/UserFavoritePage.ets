@@ -1,74 +1,51 @@
 import ArrayList from '@ohos.util.ArrayList'
 //import { Hitokoto } from '../models/Hitokoto';
+import fetch from '@system.fetch'
+import http from '@ohos.net.http';
+import promptAction from '@ohos.promptAction';
+import { Hitokoto, HitokotoListResponse } from '../models/Hitokoto'
 
-@Observed
-class Hitokoto {
-  id: string;
-  uuid: string;
-  hitokoto: string;
-  type: string;
-  from: string;
-  from_who: string;
-  creator: string;
-  creator_uid: number;
-  reviewer: number;
-  commit_from: string;
-  created_at: string;
-  length: number;
-  isliked: boolean
 
-  constructor(  id: string, uuid: string, hitokoto: string, type: string, from: string, from_who: string, creator: string, creator_uid: number, reviewer: number, commit_from: string,
-                created_at: string, length: number) {
-    this.id = id;
-    this.uuid = uuid;
-    this.hitokoto = hitokoto;
-    this.type = type;
-    this.from = from;
-    this.from_who = from_who;
-    this.creator = creator;
-    this.creator_uid = creator_uid;
-    this.reviewer = reviewer;
-    this.commit_from = commit_from;
-    this.created_at = created_at;
-    this.length = length;
+async function fetchHitokotoData(userId: number): Promise<Array<Hitokoto>> {
+  try {
+    let dio = http.createHttp();
+    let requestData = { userId: userId };
+    let response = await dio.request('http://localhost:8080/api/user/upload',{extraData:requestData,header:{'Ahu'}})
+    dio.destroy()
 
+    let hitokotosResponse  = JSON.parse(response.result.toString()) as HitokotoListResponse
+
+    // if (hitokotosResponse.hitokotoList === undefined) {
+    //   return promptAction.showToast({message:'获取失败'});
+    // }
+    let hitokotoUploadList: Array<Hitokoto> = hitokotosResponse.hitokotoList;
+    return hitokotoUploadList
+  } catch (e) {
+    console.log(e)
+    promptAction.showToast({message:`错误 ${e}`})
   }
-
 }
-
-// function fetchHitokotoData(): Array<Hitokoto> {
-//   return[
-//     new Hitokoto('9269', '4fe95780-e679-44fc-a8a4-f963077c13c7', '没有相同的经历是无法相互感受的。1', 'a', '火影忍者', '佩恩', '空吧', 14633, 4756, 'web', '1681565935', 16),
-//   ];
-// }
 
 @Entry
 @Component
 struct UserUploadPage {
-  @State hitokotoList: Array<Hitokoto>= [
-    new Hitokoto('9269','4fe95780-e679-44fc-a8a4-f963077c13c7','没有相同的经历是无法相互感受的。1',
-      'a','火影忍者','佩恩','空吧',14633,4756,'web','1681565935', 16),
-    new Hitokoto('9211','4fe95780-e679-44fc-a8a4-f963077c13c1','没有相同的经历是无法相互感受的。2',
-      'a','火影忍者','佩恩','空吧',14633,4756,'web','1681565935', 16),
-    new Hitokoto('9222','4fe95780-e679-44fc-a8a4-f963077c13c2','没有相同的经历是无法相互感受的。3',
-      'a','火影忍者','佩恩','空吧',14633,4756,'web','1681565935', 16),
-    new Hitokoto('9223','4fe95780-e679-44fc-a8a4-f963077c13c3','没有相同的经历是无法相互感受的。3',
-      'a','火影忍者','佩恩','空吧',14633,4756,'web','1681565935', 16),
-    new Hitokoto('9225','4fe95780-e679-44fc-a8a4-f963077c13c5','没有相同的经历是无法相互感受的。3',
-      'a','火影忍者','佩恩','空吧',14633,4756,'web','1681565935', 16),
-    new Hitokoto('9279','4fe95780-e679-44fc-a8a4-f963077c13c8','没有相同的经历是无法相互感受的。3',
-      'a','火影忍者','佩恩','空吧',14633,4756,'web','1681565935', 16),
-    new Hitokoto('9299','4fe95780-e679-44fc-a8a4-f963077c13c0','没有相同的经历是无法相互感受的。3',
-      'a','火影忍者','佩恩','空吧',14633,4756,'web','1681565935', 16),
-  ];
+  @State hitokotoList: Array<Hitokoto>= [];
 
-  // @State hitokotoList: Array<Hitokoto> = [];
-  //
-  // // 使用 onMount 生命周期钩子在组件挂载时获取数据
-  // onMount() {
-  //   // 动态获取数据
-  //   this.hitokotoList = fetchHitokotoData();
-  // }
+  userId: number = 5; // 假设用户ID为1
+
+  aboutToAppear() {
+    this.fetch()
+  }
+
+  async fetch() {
+    try {
+      let newItems = await fetchHitokotoData(this.userId);
+      this.hitokotoList = [...this.hitokotoList, ...newItems];
+    } catch (e) {
+      console.log(e);
+      promptAction.showToast({ message: `错误 ${e}` });
+    }
+  }
 
   @Builder AppbarAction() {
     Row({ space: 8 }) {
@@ -81,6 +58,8 @@ struct UserUploadPage {
       }.backgroundColor(Color.Transparent)
     }.justifyContent(FlexAlign.End)
   }
+
+
   build() {
     Navigation() {
       List() {
@@ -101,9 +80,10 @@ struct UserUploadPage {
 
 @Component
 struct HitokotoItem {
-  @ObjectLink content: Hitokoto;
+  content: Hitokoto;
 
   build() {
+
     Column({ space: 8 }) {
       Column() {
         Text('「').width('100%')
