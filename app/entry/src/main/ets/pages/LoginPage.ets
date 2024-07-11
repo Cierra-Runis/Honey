@@ -3,11 +3,13 @@ import http from '@ohos.net.http'
 import router from '@ohos.router'
 import { Token } from '../commom/Token';
 import { LoginRequest, LoginResponse } from '../models/User';
+import { Constance } from '../commom/Constance';
+
 @Entry()
 @Component
 struct LoginPage {
-  //appStorage层未找到token 则赋值test2
-  @StorageLink('token') token : string | undefined = Token.getToken();
+
+  @StorageLink('token') token : string = Token.getToken();
   username: string = ''
   password: string = ''
   // 匹配字符串
@@ -93,7 +95,7 @@ struct LoginPage {
       let httprequest = http.createHttp()
 
 
-      let response = await httprequest.request("http://127.0.0.1:8080/api/login",
+      let response = await httprequest.request(`${Constance.baseUrl}/api/login`,
         {
           method: http.RequestMethod.POST,
           extraData: params
@@ -103,13 +105,19 @@ struct LoginPage {
 
       let json = JSON.parse(response.result.toString()) as LoginResponse;
 
+      if (json.token === undefined || json.token === null){
+        return promptAction.showToast({message: json.message})
+      }
+
       //获取token
-      Token.saveToken(json.token)
+      if (!Token.saveToken(json.token)){
+        promptAction.showToast({message:"保存 Token 失败"})
+      }
 
       // if (err) {
       //   return promptAction.showToast({ message: "登录失败" })
       // }
-      promptAction.showToast({ message: '登录成功' })
+      promptAction.showToast({ message: `登录成功 Token ${json.token} ${Token.getToken()}` })
       // router.pushUrl({ url: 'pages/HomePage' })
 
     } catch (e) {

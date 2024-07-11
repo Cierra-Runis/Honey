@@ -24,8 +24,9 @@ Future<Response> _post(RequestContext context) async {
     );
   }
 
-  if (sha256.convert(utf8.encode(request.password)).toString() !=
-      user.password) {
+  final hash = sha256.convert(utf8.encode(request.password)).toString();
+
+  if (hash != user.password) {
     return Response.json(
       statusCode: HttpStatus.forbidden,
       body: const LoginResponse(message: '密码错误'),

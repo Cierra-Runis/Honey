@@ -1,7 +1,7 @@
 import { HomePage } from './HomePage'
 import { MorePage } from './MorePage'
 // 未编译成app貌似是不会储存到本地 无法测试...
-PersistentStorage.PersistProp('token', 'test');
+
 @Entry
 @Component
 struct Index {

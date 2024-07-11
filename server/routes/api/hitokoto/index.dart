@@ -1,8 +1,6 @@
 import 'package:server/index.dart';
 
 Future<Response> onRequest(RequestContext context) async {
-  print(context.request);
-
   return switch (context.request.method) {
     HttpMethod.get => await _get(context),
     HttpMethod.post => await _post(context),

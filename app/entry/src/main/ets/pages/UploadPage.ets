@@ -2,10 +2,11 @@ import promptAction from '@ohos.promptAction'
 import http from '@ohos.net.http'
 import router from '@ohos.router'
 import { HitokotoPostRequest,HitokotoResponse } from '../models/Hitokoto';
+import { Constance } from '../commom/Constance';
 
 @Entry
 @Component
-struct Uploadpage {
+struct UploadPage {
   @State source: string = "";
   @State sourceWho: string | null = ""; // 可以是字符串或者null
   @State hitokoto: string = "";
@@ -13,11 +14,10 @@ struct Uploadpage {
   @State creatorId: number = 1;
   @State menuSelected: Boolean = true
 
-
   async  fetch(params) {
     try {
       let dio = http.createHttp();
-      let response = await dio.request('http://localhost:8080/api/hitokoto', {
+      let response = await dio.request(`${Constance.baseUrl}/api/hitokoto`, {
         method: http.RequestMethod.POST,
         extraData: params
       })

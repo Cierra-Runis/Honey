@@ -4,13 +4,14 @@ import fetch from '@system.fetch'
 import http from '@ohos.net.http';
 import promptAction from '@ohos.promptAction';
 import { Hitokoto, HitokotoListResponse } from '../models/Hitokoto'
+import { Constance } from '../commom/Constance';
 
 
 async function fetchHitokotoData(userId: number): Promise<Array<Hitokoto>> {
   try {
     let dio = http.createHttp();
     let requestData = { userId: userId };
-    let response = await dio.request('http://localhost:8080/api/user/upload',{extraData:requestData,header:{'Ahu'}})
+    let response = await dio.request(`${Constance.baseUrl}/api/user/upload`,{extraData:requestData})
     dio.destroy()
 
     let hitokotosResponse  = JSON.parse(response.result.toString()) as HitokotoListResponse

@@ -1,20 +1,25 @@
 import router from '@ohos.router'
+import { Token } from '../commom/Token'
 
 @Entry
 @Component
 export struct MorePage {
+
+
+  @StorageLink('token') token : string = Token.getToken();
+
   build() {
     Navigation() {
 
       Row({ space: 8 }) {
         Image($r('app.media.app_icon')).width(64)
         Column({ space: 4 }) {
-          Text('未登录 / 用户名')
+          Text(this.token ? '已登录' : '未登录')
           Text('UUID').fontSize(12)
         }.alignItems(HorizontalAlign.Start)
       }.width('100%')
       .onClick(() => {
-        router.pushUrl({ url: 'pages/LoginPage' })
+        this.token ? router.pushUrl({url:'pages/ProfilePage'}) : router.pushUrl({ url: 'pages/LoginPage' })
       })
       .padding(16)
 
@@ -22,13 +27,15 @@ export struct MorePage {
         ListItem() {
           Text('我的投稿').width('100%')
         }.onClick(() => {
-          router.pushUrl({ url: 'pages/UserUploadPage' })
+
+          this.token ? router.pushUrl({ url: 'pages/UserUploadPage' }) :  router.pushUrl({ url: 'pages/LoginPage' })
+
         }).padding(16)
 
         ListItem() {
           Text('我的收藏').width('100%')
         }.onClick(() => {
-          router.pushUrl({ url: 'pages/UserFavoritePage' })
+          this.token ?  router.pushUrl({ url: 'pages/UserFavoritePage' }) :  router.pushUrl({ url: 'pages/LoginPage' })
         }).padding(16)
 
         ListItem() {
@@ -37,6 +44,8 @@ export struct MorePage {
           router.pushUrl({ url: 'pages/AboutPage' })
         }).padding(16)
       }.backgroundColor("#FAFAFA").margin(16).borderRadius(8)
+
+      Text(`${this.token}`)
 
     }.title('我的')
   }

@@ -2,6 +2,7 @@ import ArrayList from '@ohos.util.ArrayList'
 import http from '@ohos.net.http';
 import { Hitokoto, HitokotoResponse } from '../models/Hitokoto'
 import promptAction from '@ohos.promptAction';
+import { Constance } from '../commom/Constance';
 
 @Entry
 @Component
@@ -15,7 +16,7 @@ export struct HomePage {
   async fetch() {
     try {
       let dio = http.createHttp();
-      let response = await dio.request('http://localhost:8080/api/hitokoto')
+      let response = await dio.request(`${Constance.baseUrl}/api/hitokoto`)
       dio.destroy()
 
       let hitokoto = JSON.parse(response.result.toString()) as HitokotoResponse

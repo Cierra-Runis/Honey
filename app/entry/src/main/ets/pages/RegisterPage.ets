@@ -3,6 +3,7 @@ import http from '@ohos.net.http'
 import router from '@ohos.router'
 import { RegisterRequest, RegisterResponse } from '../models/User'
 import { Token } from '../commom/Token'
+import { Constance } from '../commom/Constance'
 
 @Entry
 @Component
@@ -103,7 +104,7 @@ struct RegisterPage {
       let httprequest = http.createHttp()
 
       let response = await httprequest.request(
-        "http://127.0.0.1:8080/api/register",
+        `${Constance.baseUrl}/api/register`,
         {
           method: http.RequestMethod.POST,
           extraData: params
