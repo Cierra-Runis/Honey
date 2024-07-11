@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:server/index.dart';
 
 Future<Response> onRequest(RequestContext context) async {
@@ -21,7 +24,8 @@ Future<Response> _post(RequestContext context) async {
     );
   }
 
-  if (request.password != user.password) {
+  if (sha256.convert(utf8.encode(request.password)).toString() !=
+      user.password) {
     return Response.json(
       statusCode: HttpStatus.forbidden,
       body: const LoginResponse(message: '密码错误'),

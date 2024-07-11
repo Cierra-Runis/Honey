@@ -1157,6 +1157,10 @@ const UserProfileSchema = IsarGeneratedSchema(
         type: IsarType.long,
       ),
       IsarPropertySchema(
+        name: 'name',
+        type: IsarType.string,
+      ),
+      IsarPropertySchema(
         name: 'description',
         type: IsarType.string,
       ),
@@ -1186,10 +1190,11 @@ const UserProfileSchema = IsarGeneratedSchema(
 @isarProtected
 int serializeUserProfile(IsarWriter writer, UserProfile object) {
   IsarCore.writeLong(writer, 1, object.userId);
-  IsarCore.writeString(writer, 2, object.description);
-  IsarCore.writeLong(writer, 3, object.createAt.toUtc().microsecondsSinceEpoch);
-  IsarCore.writeLong(writer, 4, object.editAt.toUtc().microsecondsSinceEpoch);
-  IsarCore.writeString(writer, 5, object.avatarId);
+  IsarCore.writeString(writer, 2, object.name);
+  IsarCore.writeString(writer, 3, object.description);
+  IsarCore.writeLong(writer, 4, object.createAt.toUtc().microsecondsSinceEpoch);
+  IsarCore.writeLong(writer, 5, object.editAt.toUtc().microsecondsSinceEpoch);
+  IsarCore.writeString(writer, 6, object.avatarId);
   return object.id;
 }
 
@@ -1199,11 +1204,13 @@ UserProfile deserializeUserProfile(IsarReader reader) {
   _id = IsarCore.readId(reader);
   final int _userId;
   _userId = IsarCore.readLong(reader, 1);
+  final String _name;
+  _name = IsarCore.readString(reader, 2) ?? '';
   final String _description;
-  _description = IsarCore.readString(reader, 2) ?? '';
+  _description = IsarCore.readString(reader, 3) ?? '';
   final DateTime _createAt;
   {
-    final value = IsarCore.readLong(reader, 3);
+    final value = IsarCore.readLong(reader, 4);
     if (value == -9223372036854775808) {
       _createAt = DateTime.fromMillisecondsSinceEpoch(0, isUtc: true).toLocal();
     } else {
@@ -1213,7 +1220,7 @@ UserProfile deserializeUserProfile(IsarReader reader) {
   }
   final DateTime _editAt;
   {
-    final value = IsarCore.readLong(reader, 4);
+    final value = IsarCore.readLong(reader, 5);
     if (value == -9223372036854775808) {
       _editAt = DateTime.fromMillisecondsSinceEpoch(0, isUtc: true).toLocal();
     } else {
@@ -1222,10 +1229,11 @@ UserProfile deserializeUserProfile(IsarReader reader) {
     }
   }
   final String _avatarId;
-  _avatarId = IsarCore.readString(reader, 5) ?? '';
+  _avatarId = IsarCore.readString(reader, 6) ?? '';
   final object = UserProfile(
     id: _id,
     userId: _userId,
+    name: _name,
     description: _description,
     createAt: _createAt,
     editAt: _editAt,
@@ -1244,15 +1252,7 @@ dynamic deserializeUserProfileProp(IsarReader reader, int property) {
     case 2:
       return IsarCore.readString(reader, 2) ?? '';
     case 3:
-      {
-        final value = IsarCore.readLong(reader, 3);
-        if (value == -9223372036854775808) {
-          return DateTime.fromMillisecondsSinceEpoch(0, isUtc: true).toLocal();
-        } else {
-          return DateTime.fromMicrosecondsSinceEpoch(value, isUtc: true)
-              .toLocal();
-        }
-      }
+      return IsarCore.readString(reader, 3) ?? '';
     case 4:
       {
         final value = IsarCore.readLong(reader, 4);
@@ -1264,7 +1264,17 @@ dynamic deserializeUserProfileProp(IsarReader reader, int property) {
         }
       }
     case 5:
-      return IsarCore.readString(reader, 5) ?? '';
+      {
+        final value = IsarCore.readLong(reader, 5);
+        if (value == -9223372036854775808) {
+          return DateTime.fromMillisecondsSinceEpoch(0, isUtc: true).toLocal();
+        } else {
+          return DateTime.fromMicrosecondsSinceEpoch(value, isUtc: true)
+              .toLocal();
+        }
+      }
+    case 6:
+      return IsarCore.readString(reader, 6) ?? '';
     default:
       throw ArgumentError('Unknown property: $property');
   }
@@ -1274,6 +1284,7 @@ sealed class _UserProfileUpdate {
   bool call({
     required int id,
     int? userId,
+    String? name,
     String? description,
     DateTime? createAt,
     DateTime? editAt,
@@ -1290,6 +1301,7 @@ class _UserProfileUpdateImpl implements _UserProfileUpdate {
   bool call({
     required int id,
     Object? userId = ignore,
+    Object? name = ignore,
     Object? description = ignore,
     Object? createAt = ignore,
     Object? editAt = ignore,
@@ -1299,10 +1311,11 @@ class _UserProfileUpdateImpl implements _UserProfileUpdate {
           id
         ], {
           if (userId != ignore) 1: userId as int?,
-          if (description != ignore) 2: description as String?,
-          if (createAt != ignore) 3: createAt as DateTime?,
-          if (editAt != ignore) 4: editAt as DateTime?,
-          if (avatarId != ignore) 5: avatarId as String?,
+          if (name != ignore) 2: name as String?,
+          if (description != ignore) 3: description as String?,
+          if (createAt != ignore) 4: createAt as DateTime?,
+          if (editAt != ignore) 5: editAt as DateTime?,
+          if (avatarId != ignore) 6: avatarId as String?,
         }) >
         0;
   }
@@ -1312,6 +1325,7 @@ sealed class _UserProfileUpdateAll {
   int call({
     required List<int> id,
     int? userId,
+    String? name,
     String? description,
     DateTime? createAt,
     DateTime? editAt,
@@ -1328,6 +1342,7 @@ class _UserProfileUpdateAllImpl implements _UserProfileUpdateAll {
   int call({
     required List<int> id,
     Object? userId = ignore,
+    Object? name = ignore,
     Object? description = ignore,
     Object? createAt = ignore,
     Object? editAt = ignore,
@@ -1335,10 +1350,11 @@ class _UserProfileUpdateAllImpl implements _UserProfileUpdateAll {
   }) {
     return collection.updateProperties(id, {
       if (userId != ignore) 1: userId as int?,
-      if (description != ignore) 2: description as String?,
-      if (createAt != ignore) 3: createAt as DateTime?,
-      if (editAt != ignore) 4: editAt as DateTime?,
-      if (avatarId != ignore) 5: avatarId as String?,
+      if (name != ignore) 2: name as String?,
+      if (description != ignore) 3: description as String?,
+      if (createAt != ignore) 4: createAt as DateTime?,
+      if (editAt != ignore) 5: editAt as DateTime?,
+      if (avatarId != ignore) 6: avatarId as String?,
     });
   }
 }
@@ -1352,6 +1368,7 @@ extension UserProfileUpdate on IsarCollection<int, UserProfile> {
 sealed class _UserProfileQueryUpdate {
   int call({
     int? userId,
+    String? name,
     String? description,
     DateTime? createAt,
     DateTime? editAt,
@@ -1368,6 +1385,7 @@ class _UserProfileQueryUpdateImpl implements _UserProfileQueryUpdate {
   @override
   int call({
     Object? userId = ignore,
+    Object? name = ignore,
     Object? description = ignore,
     Object? createAt = ignore,
     Object? editAt = ignore,
@@ -1375,10 +1393,11 @@ class _UserProfileQueryUpdateImpl implements _UserProfileQueryUpdate {
   }) {
     return query.updateProperties(limit: limit, {
       if (userId != ignore) 1: userId as int?,
-      if (description != ignore) 2: description as String?,
-      if (createAt != ignore) 3: createAt as DateTime?,
-      if (editAt != ignore) 4: editAt as DateTime?,
-      if (avatarId != ignore) 5: avatarId as String?,
+      if (name != ignore) 2: name as String?,
+      if (description != ignore) 3: description as String?,
+      if (createAt != ignore) 4: createAt as DateTime?,
+      if (editAt != ignore) 5: editAt as DateTime?,
+      if (avatarId != ignore) 6: avatarId as String?,
     });
   }
 }
@@ -1399,6 +1418,7 @@ class _UserProfileQueryBuilderUpdateImpl implements _UserProfileQueryUpdate {
   @override
   int call({
     Object? userId = ignore,
+    Object? name = ignore,
     Object? description = ignore,
     Object? createAt = ignore,
     Object? editAt = ignore,
@@ -1408,10 +1428,11 @@ class _UserProfileQueryBuilderUpdateImpl implements _UserProfileQueryUpdate {
     try {
       return q.updateProperties(limit: limit, {
         if (userId != ignore) 1: userId as int?,
-        if (description != ignore) 2: description as String?,
-        if (createAt != ignore) 3: createAt as DateTime?,
-        if (editAt != ignore) 4: editAt as DateTime?,
-        if (avatarId != ignore) 5: avatarId as String?,
+        if (name != ignore) 2: name as String?,
+        if (description != ignore) 3: description as String?,
+        if (createAt != ignore) 4: createAt as DateTime?,
+        if (editAt != ignore) 5: editAt as DateTime?,
+        if (avatarId != ignore) 6: avatarId as String?,
       });
     } finally {
       q.close();
@@ -1595,8 +1616,7 @@ extension UserProfileQueryFilter
     });
   }
 
-  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
-      descriptionEqualTo(
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition> nameEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1611,8 +1631,7 @@ extension UserProfileQueryFilter
     });
   }
 
-  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
-      descriptionGreaterThan(
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition> nameGreaterThan(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1628,7 +1647,7 @@ extension UserProfileQueryFilter
   }
 
   QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
-      descriptionGreaterThanOrEqualTo(
+      nameGreaterThanOrEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1643,8 +1662,7 @@ extension UserProfileQueryFilter
     });
   }
 
-  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
-      descriptionLessThan(
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition> nameLessThan(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1660,7 +1678,7 @@ extension UserProfileQueryFilter
   }
 
   QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
-      descriptionLessThanOrEqualTo(
+      nameLessThanOrEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1668,6 +1686,184 @@ extension UserProfileQueryFilter
       return query.addFilterCondition(
         LessOrEqualCondition(
           property: 2,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition> nameBetween(
+    String lower,
+    String upper, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        BetweenCondition(
+          property: 2,
+          lower: lower,
+          upper: upper,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition> nameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        StartsWithCondition(
+          property: 2,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition> nameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EndsWithCondition(
+          property: 2,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition> nameContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        ContainsCondition(
+          property: 2,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition> nameMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        MatchesCondition(
+          property: 2,
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition> nameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const EqualCondition(
+          property: 2,
+          value: '',
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      nameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const GreaterCondition(
+          property: 2,
+          value: '',
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      descriptionEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EqualCondition(
+          property: 3,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      descriptionGreaterThan(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterCondition(
+          property: 3,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      descriptionGreaterThanOrEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(
+          property: 3,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      descriptionLessThan(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessCondition(
+          property: 3,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
+      descriptionLessThanOrEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessOrEqualCondition(
+          property: 3,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -1684,7 +1880,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         BetweenCondition(
-          property: 2,
+          property: 3,
           lower: lower,
           upper: upper,
           caseSensitive: caseSensitive,
@@ -1701,7 +1897,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         StartsWithCondition(
-          property: 2,
+          property: 3,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -1717,7 +1913,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         EndsWithCondition(
-          property: 2,
+          property: 3,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -1730,7 +1926,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         ContainsCondition(
-          property: 2,
+          property: 3,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -1743,7 +1939,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         MatchesCondition(
-          property: 2,
+          property: 3,
           wildcard: pattern,
           caseSensitive: caseSensitive,
         ),
@@ -1756,7 +1952,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         const EqualCondition(
-          property: 2,
+          property: 3,
           value: '',
         ),
       );
@@ -1768,7 +1964,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         const GreaterCondition(
-          property: 2,
+          property: 3,
           value: '',
         ),
       );
@@ -1781,7 +1977,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         EqualCondition(
-          property: 3,
+          property: 4,
           value: value,
         ),
       );
@@ -1795,7 +1991,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         GreaterCondition(
-          property: 3,
+          property: 4,
           value: value,
         ),
       );
@@ -1809,7 +2005,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         GreaterOrEqualCondition(
-          property: 3,
+          property: 4,
           value: value,
         ),
       );
@@ -1823,7 +2019,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         LessCondition(
-          property: 3,
+          property: 4,
           value: value,
         ),
       );
@@ -1837,7 +2033,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         LessOrEqualCondition(
-          property: 3,
+          property: 4,
           value: value,
         ),
       );
@@ -1851,7 +2047,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         BetweenCondition(
-          property: 3,
+          property: 4,
           lower: lower,
           upper: upper,
         ),
@@ -1865,7 +2061,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         EqualCondition(
-          property: 4,
+          property: 5,
           value: value,
         ),
       );
@@ -1879,7 +2075,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         GreaterCondition(
-          property: 4,
+          property: 5,
           value: value,
         ),
       );
@@ -1893,7 +2089,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         GreaterOrEqualCondition(
-          property: 4,
+          property: 5,
           value: value,
         ),
       );
@@ -1906,7 +2102,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         LessCondition(
-          property: 4,
+          property: 5,
           value: value,
         ),
       );
@@ -1920,7 +2116,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         LessOrEqualCondition(
-          property: 4,
+          property: 5,
           value: value,
         ),
       );
@@ -1934,7 +2130,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         BetweenCondition(
-          property: 4,
+          property: 5,
           lower: lower,
           upper: upper,
         ),
@@ -1949,7 +2145,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         EqualCondition(
-          property: 5,
+          property: 6,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -1965,7 +2161,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         GreaterCondition(
-          property: 5,
+          property: 6,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -1981,7 +2177,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         GreaterOrEqualCondition(
-          property: 5,
+          property: 6,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -1997,7 +2193,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         LessCondition(
-          property: 5,
+          property: 6,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -2013,7 +2209,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         LessOrEqualCondition(
-          property: 5,
+          property: 6,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -2029,7 +2225,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         BetweenCondition(
-          property: 5,
+          property: 6,
           lower: lower,
           upper: upper,
           caseSensitive: caseSensitive,
@@ -2046,7 +2242,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         StartsWithCondition(
-          property: 5,
+          property: 6,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -2062,7 +2258,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         EndsWithCondition(
-          property: 5,
+          property: 6,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -2075,7 +2271,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         ContainsCondition(
-          property: 5,
+          property: 6,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -2089,7 +2285,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         MatchesCondition(
-          property: 5,
+          property: 6,
           wildcard: pattern,
           caseSensitive: caseSensitive,
         ),
@@ -2102,7 +2298,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         const EqualCondition(
-          property: 5,
+          property: 6,
           value: '',
         ),
       );
@@ -2114,7 +2310,7 @@ extension UserProfileQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         const GreaterCondition(
-          property: 5,
+          property: 6,
           value: '',
         ),
       );
@@ -2151,7 +2347,7 @@ extension UserProfileQuerySortBy
     });
   }
 
-  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByDescription(
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(
@@ -2161,7 +2357,7 @@ extension UserProfileQuerySortBy
     });
   }
 
-  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByDescriptionDesc(
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByNameDesc(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(
@@ -2172,27 +2368,48 @@ extension UserProfileQuerySortBy
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByDescription(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(
+        3,
+        caseSensitive: caseSensitive,
+      );
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByDescriptionDesc(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(
+        3,
+        sort: Sort.desc,
+        caseSensitive: caseSensitive,
+      );
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByCreateAt() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(3);
-    });
-  }
-
-  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByCreateAtDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(3, sort: Sort.desc);
-    });
-  }
-
-  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByEditAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(4);
     });
   }
 
-  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByEditAtDesc() {
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByCreateAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(4, sort: Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByEditAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(5);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> sortByEditAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(5, sort: Sort.desc);
     });
   }
 
@@ -2200,7 +2417,7 @@ extension UserProfileQuerySortBy
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(
-        5,
+        6,
         caseSensitive: caseSensitive,
       );
     });
@@ -2210,7 +2427,7 @@ extension UserProfileQuerySortBy
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(
-        5,
+        6,
         sort: Sort.desc,
         caseSensitive: caseSensitive,
       );
@@ -2244,55 +2461,69 @@ extension UserProfileQuerySortThenBy
     });
   }
 
-  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByDescription(
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(2, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByDescriptionDesc(
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByNameDesc(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(2, sort: Sort.desc, caseSensitive: caseSensitive);
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByDescription(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(3, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByDescriptionDesc(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(3, sort: Sort.desc, caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByCreateAt() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(3);
-    });
-  }
-
-  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByCreateAtDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(3, sort: Sort.desc);
-    });
-  }
-
-  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByEditAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(4);
     });
   }
 
-  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByEditAtDesc() {
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByCreateAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(4, sort: Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByEditAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(5);
+    });
+  }
+
+  QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByEditAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(5, sort: Sort.desc);
     });
   }
 
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByAvatarId(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(5, caseSensitive: caseSensitive);
+      return query.addSortBy(6, caseSensitive: caseSensitive);
     });
   }
 
   QueryBuilder<UserProfile, UserProfile, QAfterSortBy> thenByAvatarIdDesc(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(5, sort: Sort.desc, caseSensitive: caseSensitive);
+      return query.addSortBy(6, sort: Sort.desc, caseSensitive: caseSensitive);
     });
   }
 }
@@ -2305,29 +2536,36 @@ extension UserProfileQueryWhereDistinct
     });
   }
 
-  QueryBuilder<UserProfile, UserProfile, QAfterDistinct> distinctByDescription(
+  QueryBuilder<UserProfile, UserProfile, QAfterDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(2, caseSensitive: caseSensitive);
     });
   }
 
+  QueryBuilder<UserProfile, UserProfile, QAfterDistinct> distinctByDescription(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(3, caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<UserProfile, UserProfile, QAfterDistinct> distinctByCreateAt() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(3);
+      return query.addDistinctBy(4);
     });
   }
 
   QueryBuilder<UserProfile, UserProfile, QAfterDistinct> distinctByEditAt() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(4);
+      return query.addDistinctBy(5);
     });
   }
 
   QueryBuilder<UserProfile, UserProfile, QAfterDistinct> distinctByAvatarId(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(5, caseSensitive: caseSensitive);
+      return query.addDistinctBy(6, caseSensitive: caseSensitive);
     });
   }
 }
@@ -2346,27 +2584,33 @@ extension UserProfileQueryProperty1
     });
   }
 
-  QueryBuilder<UserProfile, String, QAfterProperty> descriptionProperty() {
+  QueryBuilder<UserProfile, String, QAfterProperty> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(2);
     });
   }
 
-  QueryBuilder<UserProfile, DateTime, QAfterProperty> createAtProperty() {
+  QueryBuilder<UserProfile, String, QAfterProperty> descriptionProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(3);
     });
   }
 
-  QueryBuilder<UserProfile, DateTime, QAfterProperty> editAtProperty() {
+  QueryBuilder<UserProfile, DateTime, QAfterProperty> createAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(4);
     });
   }
 
-  QueryBuilder<UserProfile, String, QAfterProperty> avatarIdProperty() {
+  QueryBuilder<UserProfile, DateTime, QAfterProperty> editAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(5);
+    });
+  }
+
+  QueryBuilder<UserProfile, String, QAfterProperty> avatarIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(6);
     });
   }
 }
@@ -2385,27 +2629,33 @@ extension UserProfileQueryProperty2<R>
     });
   }
 
-  QueryBuilder<UserProfile, (R, String), QAfterProperty> descriptionProperty() {
+  QueryBuilder<UserProfile, (R, String), QAfterProperty> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(2);
     });
   }
 
-  QueryBuilder<UserProfile, (R, DateTime), QAfterProperty> createAtProperty() {
+  QueryBuilder<UserProfile, (R, String), QAfterProperty> descriptionProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(3);
     });
   }
 
-  QueryBuilder<UserProfile, (R, DateTime), QAfterProperty> editAtProperty() {
+  QueryBuilder<UserProfile, (R, DateTime), QAfterProperty> createAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(4);
     });
   }
 
-  QueryBuilder<UserProfile, (R, String), QAfterProperty> avatarIdProperty() {
+  QueryBuilder<UserProfile, (R, DateTime), QAfterProperty> editAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addProperty(5);
+    });
+  }
+
+  QueryBuilder<UserProfile, (R, String), QAfterProperty> avatarIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(6);
     });
   }
 }
@@ -2424,29 +2674,647 @@ extension UserProfileQueryProperty3<R1, R2>
     });
   }
 
+  QueryBuilder<UserProfile, (R1, R2, String), QOperations> nameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(2);
+    });
+  }
+
   QueryBuilder<UserProfile, (R1, R2, String), QOperations>
       descriptionProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addProperty(2);
+      return query.addProperty(3);
     });
   }
 
   QueryBuilder<UserProfile, (R1, R2, DateTime), QOperations>
       createAtProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addProperty(3);
+      return query.addProperty(4);
     });
   }
 
   QueryBuilder<UserProfile, (R1, R2, DateTime), QOperations> editAtProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addProperty(4);
+      return query.addProperty(5);
     });
   }
 
   QueryBuilder<UserProfile, (R1, R2, String), QOperations> avatarIdProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addProperty(5);
+      return query.addProperty(6);
+    });
+  }
+}
+
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, invalid_use_of_protected_member, lines_longer_than_80_chars, constant_identifier_names, avoid_js_rounded_ints, no_leading_underscores_for_local_identifiers, require_trailing_commas, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_in_if_null_operators, library_private_types_in_public_api, prefer_const_constructors
+// ignore_for_file: type=lint
+
+extension GetUserFavoriteCollection on Isar {
+  IsarCollection<int, UserFavorite> get userFavorites => this.collection();
+}
+
+const UserFavoriteSchema = IsarGeneratedSchema(
+  schema: IsarSchema(
+    name: 'UserFavorite',
+    idName: 'id',
+    embedded: false,
+    properties: [
+      IsarPropertySchema(
+        name: 'userId',
+        type: IsarType.long,
+      ),
+      IsarPropertySchema(
+        name: 'hitokotoId',
+        type: IsarType.long,
+      ),
+    ],
+    indexes: [],
+  ),
+  converter: IsarObjectConverter<int, UserFavorite>(
+    serialize: serializeUserFavorite,
+    deserialize: deserializeUserFavorite,
+    deserializeProperty: deserializeUserFavoriteProp,
+  ),
+  embeddedSchemas: [],
+);
+
+@isarProtected
+int serializeUserFavorite(IsarWriter writer, UserFavorite object) {
+  IsarCore.writeLong(writer, 1, object.userId);
+  IsarCore.writeLong(writer, 2, object.hitokotoId);
+  return object.id;
+}
+
+@isarProtected
+UserFavorite deserializeUserFavorite(IsarReader reader) {
+  final int _id;
+  _id = IsarCore.readId(reader);
+  final int _userId;
+  _userId = IsarCore.readLong(reader, 1);
+  final int _hitokotoId;
+  _hitokotoId = IsarCore.readLong(reader, 2);
+  final object = UserFavorite(
+    id: _id,
+    userId: _userId,
+    hitokotoId: _hitokotoId,
+  );
+  return object;
+}
+
+@isarProtected
+dynamic deserializeUserFavoriteProp(IsarReader reader, int property) {
+  switch (property) {
+    case 0:
+      return IsarCore.readId(reader);
+    case 1:
+      return IsarCore.readLong(reader, 1);
+    case 2:
+      return IsarCore.readLong(reader, 2);
+    default:
+      throw ArgumentError('Unknown property: $property');
+  }
+}
+
+sealed class _UserFavoriteUpdate {
+  bool call({
+    required int id,
+    int? userId,
+    int? hitokotoId,
+  });
+}
+
+class _UserFavoriteUpdateImpl implements _UserFavoriteUpdate {
+  const _UserFavoriteUpdateImpl(this.collection);
+
+  final IsarCollection<int, UserFavorite> collection;
+
+  @override
+  bool call({
+    required int id,
+    Object? userId = ignore,
+    Object? hitokotoId = ignore,
+  }) {
+    return collection.updateProperties([
+          id
+        ], {
+          if (userId != ignore) 1: userId as int?,
+          if (hitokotoId != ignore) 2: hitokotoId as int?,
+        }) >
+        0;
+  }
+}
+
+sealed class _UserFavoriteUpdateAll {
+  int call({
+    required List<int> id,
+    int? userId,
+    int? hitokotoId,
+  });
+}
+
+class _UserFavoriteUpdateAllImpl implements _UserFavoriteUpdateAll {
+  const _UserFavoriteUpdateAllImpl(this.collection);
+
+  final IsarCollection<int, UserFavorite> collection;
+
+  @override
+  int call({
+    required List<int> id,
+    Object? userId = ignore,
+    Object? hitokotoId = ignore,
+  }) {
+    return collection.updateProperties(id, {
+      if (userId != ignore) 1: userId as int?,
+      if (hitokotoId != ignore) 2: hitokotoId as int?,
+    });
+  }
+}
+
+extension UserFavoriteUpdate on IsarCollection<int, UserFavorite> {
+  _UserFavoriteUpdate get update => _UserFavoriteUpdateImpl(this);
+
+  _UserFavoriteUpdateAll get updateAll => _UserFavoriteUpdateAllImpl(this);
+}
+
+sealed class _UserFavoriteQueryUpdate {
+  int call({
+    int? userId,
+    int? hitokotoId,
+  });
+}
+
+class _UserFavoriteQueryUpdateImpl implements _UserFavoriteQueryUpdate {
+  const _UserFavoriteQueryUpdateImpl(this.query, {this.limit});
+
+  final IsarQuery<UserFavorite> query;
+  final int? limit;
+
+  @override
+  int call({
+    Object? userId = ignore,
+    Object? hitokotoId = ignore,
+  }) {
+    return query.updateProperties(limit: limit, {
+      if (userId != ignore) 1: userId as int?,
+      if (hitokotoId != ignore) 2: hitokotoId as int?,
+    });
+  }
+}
+
+extension UserFavoriteQueryUpdate on IsarQuery<UserFavorite> {
+  _UserFavoriteQueryUpdate get updateFirst =>
+      _UserFavoriteQueryUpdateImpl(this, limit: 1);
+
+  _UserFavoriteQueryUpdate get updateAll => _UserFavoriteQueryUpdateImpl(this);
+}
+
+class _UserFavoriteQueryBuilderUpdateImpl implements _UserFavoriteQueryUpdate {
+  const _UserFavoriteQueryBuilderUpdateImpl(this.query, {this.limit});
+
+  final QueryBuilder<UserFavorite, UserFavorite, QOperations> query;
+  final int? limit;
+
+  @override
+  int call({
+    Object? userId = ignore,
+    Object? hitokotoId = ignore,
+  }) {
+    final q = query.build();
+    try {
+      return q.updateProperties(limit: limit, {
+        if (userId != ignore) 1: userId as int?,
+        if (hitokotoId != ignore) 2: hitokotoId as int?,
+      });
+    } finally {
+      q.close();
+    }
+  }
+}
+
+extension UserFavoriteQueryBuilderUpdate
+    on QueryBuilder<UserFavorite, UserFavorite, QOperations> {
+  _UserFavoriteQueryUpdate get updateFirst =>
+      _UserFavoriteQueryBuilderUpdateImpl(this, limit: 1);
+
+  _UserFavoriteQueryUpdate get updateAll =>
+      _UserFavoriteQueryBuilderUpdateImpl(this);
+}
+
+extension UserFavoriteQueryFilter
+    on QueryBuilder<UserFavorite, UserFavorite, QFilterCondition> {
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition> idEqualTo(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EqualCondition(
+          property: 0,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition> idGreaterThan(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterCondition(
+          property: 0,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      idGreaterThanOrEqualTo(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(
+          property: 0,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition> idLessThan(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessCondition(
+          property: 0,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      idLessThanOrEqualTo(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessOrEqualCondition(
+          property: 0,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition> idBetween(
+    int lower,
+    int upper,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        BetweenCondition(
+          property: 0,
+          lower: lower,
+          upper: upper,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition> userIdEqualTo(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EqualCondition(
+          property: 1,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      userIdGreaterThan(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterCondition(
+          property: 1,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      userIdGreaterThanOrEqualTo(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(
+          property: 1,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      userIdLessThan(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessCondition(
+          property: 1,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      userIdLessThanOrEqualTo(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessOrEqualCondition(
+          property: 1,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition> userIdBetween(
+    int lower,
+    int upper,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        BetweenCondition(
+          property: 1,
+          lower: lower,
+          upper: upper,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      hitokotoIdEqualTo(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EqualCondition(
+          property: 2,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      hitokotoIdGreaterThan(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterCondition(
+          property: 2,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      hitokotoIdGreaterThanOrEqualTo(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(
+          property: 2,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      hitokotoIdLessThan(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessCondition(
+          property: 2,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      hitokotoIdLessThanOrEqualTo(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessOrEqualCondition(
+          property: 2,
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterFilterCondition>
+      hitokotoIdBetween(
+    int lower,
+    int upper,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        BetweenCondition(
+          property: 2,
+          lower: lower,
+          upper: upper,
+        ),
+      );
+    });
+  }
+}
+
+extension UserFavoriteQueryObject
+    on QueryBuilder<UserFavorite, UserFavorite, QFilterCondition> {}
+
+extension UserFavoriteQuerySortBy
+    on QueryBuilder<UserFavorite, UserFavorite, QSortBy> {
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy> sortById() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(0);
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy> sortByIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(0, sort: Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy> sortByUserId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(1);
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy> sortByUserIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(1, sort: Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy> sortByHitokotoId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(2);
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy>
+      sortByHitokotoIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(2, sort: Sort.desc);
+    });
+  }
+}
+
+extension UserFavoriteQuerySortThenBy
+    on QueryBuilder<UserFavorite, UserFavorite, QSortThenBy> {
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy> thenById() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(0);
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy> thenByIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(0, sort: Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy> thenByUserId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(1);
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy> thenByUserIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(1, sort: Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy> thenByHitokotoId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(2);
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterSortBy>
+      thenByHitokotoIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(2, sort: Sort.desc);
+    });
+  }
+}
+
+extension UserFavoriteQueryWhereDistinct
+    on QueryBuilder<UserFavorite, UserFavorite, QDistinct> {
+  QueryBuilder<UserFavorite, UserFavorite, QAfterDistinct> distinctByUserId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(1);
+    });
+  }
+
+  QueryBuilder<UserFavorite, UserFavorite, QAfterDistinct>
+      distinctByHitokotoId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(2);
+    });
+  }
+}
+
+extension UserFavoriteQueryProperty1
+    on QueryBuilder<UserFavorite, UserFavorite, QProperty> {
+  QueryBuilder<UserFavorite, int, QAfterProperty> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(0);
+    });
+  }
+
+  QueryBuilder<UserFavorite, int, QAfterProperty> userIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(1);
+    });
+  }
+
+  QueryBuilder<UserFavorite, int, QAfterProperty> hitokotoIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(2);
+    });
+  }
+}
+
+extension UserFavoriteQueryProperty2<R>
+    on QueryBuilder<UserFavorite, R, QAfterProperty> {
+  QueryBuilder<UserFavorite, (R, int), QAfterProperty> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(0);
+    });
+  }
+
+  QueryBuilder<UserFavorite, (R, int), QAfterProperty> userIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(1);
+    });
+  }
+
+  QueryBuilder<UserFavorite, (R, int), QAfterProperty> hitokotoIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(2);
+    });
+  }
+}
+
+extension UserFavoriteQueryProperty3<R1, R2>
+    on QueryBuilder<UserFavorite, (R1, R2), QAfterProperty> {
+  QueryBuilder<UserFavorite, (R1, R2, int), QOperations> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(0);
+    });
+  }
+
+  QueryBuilder<UserFavorite, (R1, R2, int), QOperations> userIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(1);
+    });
+  }
+
+  QueryBuilder<UserFavorite, (R1, R2, int), QOperations> hitokotoIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(2);
     });
   }
 }
@@ -2476,6 +3344,7 @@ _$UserProfileImpl _$$UserProfileImplFromJson(Map<String, dynamic> json) =>
     _$UserProfileImpl(
       id: (json['id'] as num).toInt(),
       userId: (json['userId'] as num).toInt(),
+      name: json['name'] as String,
       description: json['description'] as String,
       createAt: DateTime.parse(json['createAt'] as String),
       editAt: DateTime.parse(json['editAt'] as String),
@@ -2486,8 +3355,23 @@ Map<String, dynamic> _$$UserProfileImplToJson(_$UserProfileImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'userId': instance.userId,
+      'name': instance.name,
       'description': instance.description,
       'createAt': instance.createAt.toIso8601String(),
       'editAt': instance.editAt.toIso8601String(),
       'avatarId': instance.avatarId,
+    };
+
+_$UserFavoriteImpl _$$UserFavoriteImplFromJson(Map<String, dynamic> json) =>
+    _$UserFavoriteImpl(
+      id: (json['id'] as num).toInt(),
+      userId: (json['userId'] as num).toInt(),
+      hitokotoId: (json['hitokotoId'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$$UserFavoriteImplToJson(_$UserFavoriteImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'userId': instance.userId,
+      'hitokotoId': instance.hitokotoId,
     };

@@ -23,6 +23,7 @@ class UserProfile with _$UserProfile {
   const factory UserProfile({
     @Id() required int id,
     required int userId,
+    required String name,
     required String description,
     required DateTime createAt,
     required DateTime editAt,
@@ -30,4 +31,16 @@ class UserProfile with _$UserProfile {
   }) = _UserProfile;
 
   factory UserProfile.fromJson(Json json) => _$UserProfileFromJson(json);
+}
+
+@collection
+@freezed
+class UserFavorite with _$UserFavorite {
+  const factory UserFavorite({
+    @Id() required int id,
+    required int userId,
+    required int hitokotoId,
+  }) = _UserFavorite;
+
+  factory UserFavorite.fromJson(Json json) => _$UserFavoriteFromJson(json);
 }

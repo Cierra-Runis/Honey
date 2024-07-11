@@ -166,6 +166,7 @@ UserProfilePostRequest _$UserProfilePostRequestFromJson(
 mixin _$UserProfilePostRequest {
   int get id => throw _privateConstructorUsedError;
   int get userId => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   String get avatarId => throw _privateConstructorUsedError;
 
@@ -181,7 +182,8 @@ abstract class $UserProfilePostRequestCopyWith<$Res> {
           $Res Function(UserProfilePostRequest) then) =
       _$UserProfilePostRequestCopyWithImpl<$Res, UserProfilePostRequest>;
   @useResult
-  $Res call({int id, int userId, String description, String avatarId});
+  $Res call(
+      {int id, int userId, String name, String description, String avatarId});
 }
 
 /// @nodoc
@@ -200,6 +202,7 @@ class _$UserProfilePostRequestCopyWithImpl<$Res,
   $Res call({
     Object? id = null,
     Object? userId = null,
+    Object? name = null,
     Object? description = null,
     Object? avatarId = null,
   }) {
@@ -212,6 +215,10 @@ class _$UserProfilePostRequestCopyWithImpl<$Res,
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as int,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
       description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -233,7 +240,8 @@ abstract class _$$UserProfilePostRequestImplCopyWith<$Res>
       __$$UserProfilePostRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, int userId, String description, String avatarId});
+  $Res call(
+      {int id, int userId, String name, String description, String avatarId});
 }
 
 /// @nodoc
@@ -251,6 +259,7 @@ class __$$UserProfilePostRequestImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? userId = null,
+    Object? name = null,
     Object? description = null,
     Object? avatarId = null,
   }) {
@@ -263,6 +272,10 @@ class __$$UserProfilePostRequestImplCopyWithImpl<$Res>
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as int,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
       description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -281,6 +294,7 @@ class _$UserProfilePostRequestImpl extends _UserProfilePostRequest {
   const _$UserProfilePostRequestImpl(
       {required this.id,
       required this.userId,
+      required this.name,
       required this.description,
       this.avatarId = ''})
       : super._();
@@ -293,6 +307,8 @@ class _$UserProfilePostRequestImpl extends _UserProfilePostRequest {
   @override
   final int userId;
   @override
+  final String name;
+  @override
   final String description;
   @override
   @JsonKey()
@@ -300,7 +316,7 @@ class _$UserProfilePostRequestImpl extends _UserProfilePostRequest {
 
   @override
   String toString() {
-    return 'UserProfilePostRequest(id: $id, userId: $userId, description: $description, avatarId: $avatarId)';
+    return 'UserProfilePostRequest(id: $id, userId: $userId, name: $name, description: $description, avatarId: $avatarId)';
   }
 
   @override
@@ -310,6 +326,7 @@ class _$UserProfilePostRequestImpl extends _UserProfilePostRequest {
             other is _$UserProfilePostRequestImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.name, name) || other.name == name) &&
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.avatarId, avatarId) ||
@@ -319,7 +336,7 @@ class _$UserProfilePostRequestImpl extends _UserProfilePostRequest {
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, id, userId, description, avatarId);
+      Object.hash(runtimeType, id, userId, name, description, avatarId);
 
   @JsonKey(ignore: true)
   @override
@@ -340,6 +357,7 @@ abstract class _UserProfilePostRequest extends UserProfilePostRequest {
   const factory _UserProfilePostRequest(
       {required final int id,
       required final int userId,
+      required final String name,
       required final String description,
       final String avatarId}) = _$UserProfilePostRequestImpl;
   const _UserProfilePostRequest._() : super._();
@@ -351,6 +369,8 @@ abstract class _UserProfilePostRequest extends UserProfilePostRequest {
   int get id;
   @override
   int get userId;
+  @override
+  String get name;
   @override
   String get description;
   @override

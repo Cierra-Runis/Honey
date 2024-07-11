@@ -1,10 +1,13 @@
 import promptAction from '@ohos.promptAction'
 import http from '@ohos.net.http'
 import router from '@ohos.router'
-
-@Entry
+import { Token } from '../commom/Token';
+import { LoginRequest, LoginResponse } from '../models/User';
+@Entry()
 @Component
 struct LoginPage {
+  //appStorage层未找到token 则赋值test2
+  @StorageLink('token') token : string | undefined = Token.getToken();
   username: string = ''
   password: string = ''
   // 匹配字符串
@@ -55,7 +58,9 @@ struct LoginPage {
             return
           }
           // 后端请求
-          await this.sendLoginMsg({ username: this.username, password: this.password })
+          await this.sendLoginMsg({
+            username: this.username, password: this.password
+          })
 
         })
         .margin({ top: 30 })
@@ -82,27 +87,24 @@ struct LoginPage {
     .justifyContent(FlexAlign.Center)
   }
 
-  async sendLoginMsg(params: object) {
+  async sendLoginMsg(params: LoginRequest) {
     try {
       // 1.创建
       let httprequest = http.createHttp()
 
-      console.log(params.toString())
 
-      let response = await httprequest.request("http://127.0.0.1:8080/user/login",
+      let response = await httprequest.request("http://127.0.0.1:8080/api/login",
         {
           method: http.RequestMethod.POST,
           extraData: params
         }
       );
-      // 3.销毁
       httprequest.destroy()
 
-      if (response.responseCode != 200) return promptAction.showToast({ message: '登录失败' });
+      let json = JSON.parse(response.result.toString()) as LoginResponse;
 
-      let json = JSON.parse(response.result.toString());
-
-      console.log(json.toString())
+      //获取token
+      Token.saveToken(json.token)
 
       // if (err) {
       //   return promptAction.showToast({ message: "登录失败" })

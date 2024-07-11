@@ -1,44 +1,46 @@
-interface UserProfile {
+export interface UserProfile {
   id: number;
   userId: number;
+  name: string;
   description: string;
   createAt: number;
   editAt: number;
   avatarId: string;
 }
 
-interface LoginRequest {
+export  interface LoginRequest {
   username: string;
   password: string;
 }
 
-interface LoginResponse {
+export  interface LoginResponse {
   message: string;
   token: string | undefined;
 }
 
-interface UserProfileGetRequest {
+export interface UserProfileGetRequest {
   userId: number;
 }
 
-interface UserProfilePostRequest {
+export interface UserProfilePostRequest {
   id: number;
   userId: number;
+  name: string;
   description: string;
   avatarId: string;
 }
 
-interface UserProfileResponse {
+export interface UserProfileResponse {
   message: string;
   profile: UserProfile | undefined;
 }
 
-interface RegisterRequest {
+export  interface RegisterRequest {
   username: string;
   password: string;
 }
 
-interface RegisterResponse {
+export  interface RegisterResponse {
   message: string;
   token: string | undefined;
 }

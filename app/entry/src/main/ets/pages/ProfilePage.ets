@@ -10,9 +10,10 @@ class User {
   updated_at: string; // 使用字符串表示日期时间
   startday: string; // 存储格式化后的日期字符串
   upday: string;
+  avatar: string; // 用户头像URL
 
   constructor(id: number, name: string, email: string, token: string,
-              email_verified_at: string | null, created_at: string, updated_at: string) {
+              email_verified_at: string | null, created_at: string, updated_at: string, avatar: string) {
     this.id = id;
     this.name = name;
     this.email = email;
@@ -20,10 +21,11 @@ class User {
     this.email_verified_at = email_verified_at;
     this.created_at = created_at;
     this.updated_at = updated_at;
+    this.avatar = avatar;
 
     // 格式化并存储开始日期
     this.startday = this.formatDate(this.created_at);
-    this.upday = this.formatDate(this.updated_at)
+    this.upday = this.formatDate(this.updated_at);
   }
 
   private formatDate(dateTimeString: string): string {
@@ -43,16 +45,19 @@ let user = new User(
   "EWq9Qq8H3LCW6Jiv3vnVCIqRy5Un08sDgaTztSX4",
   null,
   "2020-02-16T18:18:16.000000Z",
-  "2020-02-16T18:18:16.000000Z"
+  "2020-02-16T18:18:16.000000Z",
+  "path/to/default/avatar.jpg" // 默认头像URL
 );
-//邮箱是否验证
+
+// 邮箱是否验证
 let ema: String = "未验证";
 if (user.email_verified_at != null) {
-  ema = user.email_verified_at
+  ema = user.email_verified_at;
 }
 
-//介绍样式
-@Extend(Text) function globalFancy() {
+// 介绍样式
+@Extend(Text)
+function globalFancy() {
   .padding({
     left: 10,
     right: 30,
@@ -60,8 +65,10 @@ if (user.email_verified_at != null) {
     bottom: 10
   }).fontColor(Color.Gray).fontSize(17)
 }
-//row样式
-@Extend(Row) function rowFancy() {
+
+// row样式
+@Extend(Row)
+function rowFancy() {
   .width("80%").height("20%").justifyContent(FlexAlign.Start).border({
     width: { bottom: 1 },
     color: Color.Gray,
@@ -69,17 +76,28 @@ if (user.email_verified_at != null) {
   })
 }
 
-
 @Entry
 @Component
 struct ProfilePage {
+  @State img: Resource = $r('app.media.icon');  // 默认头像，使用 Resource 类型
+
+  onInit() {
+    const params = router.getParams() as any;  // 使用 any 类型，或更具体的类型
+    if (params && params.avatar) {
+      this.img = params.avatar;  // 更新头像
+    }
+  }
+
   build() {
     Navigation() {
       Column() {
-        //头像
+        // 头像
         Column({ space: 8 }) {
-          Image($r("app.media.icon")).width(64)
-          Text(user.name).fontSize(18).borderStyle(BorderStyle.Solid)
+          Image(this.img)  // 显示头像
+            .width(64)
+            .height(64)
+            .borderRadius(32);
+          Text(user.name).fontSize(18).borderStyle(BorderStyle.Solid);
         }
         .width("80%")
         .height("20%")
@@ -87,37 +105,43 @@ struct ProfilePage {
         .backgroundColor(Color.White)
         .margin(10)
         .borderRadius(10)
-        .justifyContent(FlexAlign.Center)
+        .justifyContent(FlexAlign.Center);
 
-        //个人信息
+        // 个人信息
         Column() {
           Row() {
-            Text("电子邮箱").fontSize(15).globalFancy()
-            Text(user.email).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1)
-
-          }.rowFancy()
-
-          Row() {
-            Text("创建时间").fontSize(15).globalFancy()
-            Text(user.startday).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1)
-          }.rowFancy()
+            Text("电子邮箱").fontSize(15).globalFancy();
+            Text(user.email).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1);
+          }.rowFancy();
 
           Row() {
-            Text("更新时间").fontSize(15).globalFancy()
-            Text(user.upday).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1)
-          }.rowFancy()
+            Text("创建时间").fontSize(15).globalFancy();
+            Text(user.startday).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1);
+          }.rowFancy();
 
           Row() {
-            Text("邮箱验证").fontSize(15).globalFancy()
-            Text(ema.toString()).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1)
-          }.rowFancy()
+            Text("更新时间").fontSize(15).globalFancy();
+            Text(user.upday).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1);
+          }.rowFancy();
+
+          Row() {
+            Text("邮箱验证").fontSize(15).globalFancy();
+            Text(ema.toString()).fontSize(15).borderStyle(BorderStyle.Solid).padding(10).layoutWeight(1);
+          }.rowFancy();
+
+          // 上传头像链接
+          Text("上传头像").fontSize(14).padding(5).fontColor(Color.Blue).onClick(() => {
+            router.push({
+              url: 'pages/UploadAvatarPage',
+              params: { avatar: this.img }
+            });
+          });
 
           Image($r("app.media.ic_public_add_norm")).width(40).fillColor("#ff6d51dd")
             .margin({ top: 20 }).onClick(() => {
-            router.pushUrl({ url: 'pages/UploadPage' })
-          })
-          Text("上传句子").fontSize(14).padding(5).fontColor(Color.Gray)
-
+            router.pushUrl({ url: 'pages/UploadPage' });
+          });
+          Text("上传句子").fontSize(14).padding(5).fontColor(Color.Gray);
         }
         .width("80%")
         .height("60%")
@@ -125,9 +149,8 @@ struct ProfilePage {
         .backgroundColor(Color.White)
         .margin({ bottom: 10 })
         .borderRadius(10)
-        .justifyContent(FlexAlign.Start)
-
-      }.width("100%").height("100%").backgroundColor("#ccc").justifyContent(FlexAlign.Center)
-    }.title('编辑个人信息').titleMode(NavigationTitleMode.Mini)
+        .justifyContent(FlexAlign.Start);
+      }.width("100%").height("100%").backgroundColor("#ccc").justifyContent(FlexAlign.Center);
+    }.title('编辑个人信息').titleMode(NavigationTitleMode.Mini);
   }
 }

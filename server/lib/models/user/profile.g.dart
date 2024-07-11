@@ -23,6 +23,7 @@ _$UserProfilePostRequestImpl _$$UserProfilePostRequestImplFromJson(
     _$UserProfilePostRequestImpl(
       id: (json['id'] as num).toInt(),
       userId: (json['userId'] as num).toInt(),
+      name: json['name'] as String,
       description: json['description'] as String,
       avatarId: json['avatarId'] as String? ?? '',
     );
@@ -32,6 +33,7 @@ Map<String, dynamic> _$$UserProfilePostRequestImplToJson(
     <String, dynamic>{
       'id': instance.id,
       'userId': instance.userId,
+      'name': instance.name,
       'description': instance.description,
       'avatarId': instance.avatarId,
     };
